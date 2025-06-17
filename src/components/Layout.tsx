@@ -17,7 +17,7 @@ export default function Layout() {
         <div className="w-full flex flex-col grow">
             <div className="h-[6vh] shrink-0 bg-base-300 flex justify-between items-center px-7 border-l-base-100 border-l">
                 <Menu onClick={() => { setOpen(v => !v) }} className=" cursor-pointer" />
-                <label className="flex cursor-pointer gap-2">
+                {/* <label className="flex cursor-pointer gap-2">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -45,9 +45,9 @@ export default function Layout() {
                         <path
                             d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
                     </svg>
-                </label>
+                </label> */}
             </div>
-            <div className="grow p-3">
+            <div className="grow p-3 overflow-y-auto">
                 <Outlet />
             </div>
         </div>

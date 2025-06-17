@@ -1,4 +1,4 @@
-import { BarChart3, Package,  } from 'lucide-react'
+import { BarChart3, CreditCard, Package, } from 'lucide-react'
 import type { JSX } from 'react';
 
 const navigations: { title: string; icon: JSX.Element, to?: string; navs?: any[] }[] = [
@@ -15,6 +15,11 @@ const navigations: { title: string; icon: JSX.Element, to?: string; navs?: any[]
         //     { to: "/product", name: "info" },
         //     { to: "/product/create", name: "create" }
         // ]
+    },
+    {
+        title: "Transaksi",
+        to: "/transaksi",
+        icon: <CreditCard />
     },
 ]
 

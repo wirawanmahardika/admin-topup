@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import ProductInfo from "./pages/product/Info";
 import TambahProduct from "./pages/product/Tambah";
 import EditProduct from "./pages/product/Edit";
+import TransaksiInfo from "./pages/transaksi/Info";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -16,6 +17,8 @@ const router = createBrowserRouter(
         <Route path="product" element={<ProductInfo />} />
         <Route path="product/tambah" element={<TambahProduct />} />
         <Route path="product/edit/:id" element={<EditProduct />} />
+
+        <Route path="transaksi" element={<TransaksiInfo />} />
       </Route>
     </>
   )
