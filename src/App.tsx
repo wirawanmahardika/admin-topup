@@ -1,5 +1,11 @@
 import Layout from "./components/Layout";
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  // createHashRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider
+} from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ProductInfo from "./pages/product/Info";
@@ -8,6 +14,7 @@ import EditProduct from "./pages/product/Edit";
 import TransaksiInfo from "./pages/transaksi/Info";
 
 const router = createBrowserRouter(
+// const router = createHashRouter(
   createRoutesFromElements(
     <>
       <Route path="/login" element={<Login />} />
