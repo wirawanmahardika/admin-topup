@@ -47,7 +47,7 @@ export default function Layout() {
                     </svg>
                 </label>
             </div>
-            <div className="grow p-5">
+            <div className="grow p-3">
                 <Outlet />
             </div>
         </div>
