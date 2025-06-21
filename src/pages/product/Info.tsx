@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { productReducer } from "../../hooks/reducer/product";
+import axios from 'axios'
+import type { productType } from "../../types/productType";
 
 // Modal sederhana
 function ConfirmModal({
@@ -28,34 +31,25 @@ function ConfirmModal({
     );
 }
 
-type Product = {
-    id: number;
-    name: string;
-    game: string;
-    price: number;
-    status: "active" | "inactive";
-};
-
-const dummyProducts: Product[] = [
-    { id: 1, name: "86 Diamonds", game: "Mobile Legends", price: 20000, status: "active" },
-    { id: 2, name: "70 Diamonds", game: "Free Fire", price: 15000, status: "active" },
-    { id: 3, name: "60 UC", game: "PUBG Mobile", price: 17000, status: "inactive" },
-    { id: 4, name: "Genesis Crystal 300", game: "Genshin Impact", price: 75000, status: "active" },
-];
-
 export default function ProductInfo() {
-    const [products, setProducts] = useState<Product[]>(dummyProducts);
+    const [products, dispatch] = useReducer(productReducer, [])
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<productType | null>(null);
 
-    const handleDelete = (product: Product) => {
+    useEffect(() => {
+        axios.get("http://localhost:3000/products").then(res => {
+            dispatch({ type: "get-all", payload: res.data.data })
+        })
+    }, [])
+
+    const handleDelete = (product: productType) => {
         setSelectedProduct(product);
         setModalOpen(true);
     };
 
     const confirmDelete = () => {
         if (selectedProduct) {
-            setProducts(products.filter(p => p.id !== selectedProduct.id));
+            dispatch({ type: "delete", payload: selectedProduct.id });
             setModalOpen(false);
             setSelectedProduct(null);
         }
@@ -88,12 +82,12 @@ export default function ProductInfo() {
                             products.map((product, idx) => (
                                 <tr key={product.id}>
                                     <td>{idx + 1}</td>
-                                    <td>{product.name}</td>
-                                    <td>{product.game}</td>
-                                    <td>Rp {product.price.toLocaleString()}</td>
+                                    <td>{product.nama}</td>
+                                    <td>{product.category.nama}</td>
+                                    <td>Rp {product.harga.toLocaleString()}</td>
                                     <td>
-                                        <span className={`badge ${product.status === "active" ? "badge-success" : "badge-error"}`}>
-                                            {product.status === "active" ? "Aktif" : "Nonaktif"}
+                                        <span className={`badge ${product.status ? "badge-success" : "badge-error"}`}>
+                                            {product.status ? "Aktif" : "Nonaktif"}
                                         </span>
                                     </td>
                                     <td>
@@ -115,7 +109,7 @@ export default function ProductInfo() {
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
                 onConfirm={confirmDelete}
-                productName={selectedProduct?.name || ""}
+                productName={selectedProduct?.nama || ""}
             />
         </div>
     )
