@@ -1,23 +1,34 @@
 export type productType = {
-    id: number;
-    id_category: number;
-    nama: string;
-    harga: number;
-    ilustrasi: string;
-    digiflazz_code: string;
-    deskripsi: string;
-    status: true,
+    id: string;
+    id_brand: string;
+    digiflazz_product: boolean,
+    product_name: string;
+    category: string;
+    type: string;
+    seller_name: string;
+    price: number,
+    buyer_sku_code: string;
+    buyer_product_status: boolean,
+    seller_product_status: boolean,
+    unlimited_stock: boolean,
+    stock: number,
+    multi: boolean,
+    start_cut_off: string;
+    end_cut_off: string;
+    desc: string;
     created_at: string;
     updated_at: string;
-    category: {
-        id: number;
-        nama: string;
+    brand_info?: {
+        id: string;
+        name: string;
+        image: string;
+        popularity: number,
         created_at: string;
         updated_at: string;
     }
 }
 
 export type productReducerActionType = {
-    type: "get-all" | "delete",
-    payload: productType[] | number
+    type: string;
+    payload: productType[] | string
 }

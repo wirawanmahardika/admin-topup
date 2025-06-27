@@ -38,9 +38,14 @@ export default function ProductInfo() {
 
     useEffect(() => {
         axios.get("http://localhost:3000/products").then(res => {
+            console.log(res.data.data);
+            
             dispatch({ type: "get-all", payload: res.data.data })
         })
     }, [])
+
+    console.log(products);
+    
 
     const handleDelete = (product: productType) => {
         setSelectedProduct(product);
@@ -79,15 +84,16 @@ export default function ProductInfo() {
                                 <td colSpan={6} className="text-center text-gray-400">Belum ada produk</td>
                             </tr>
                         ) : (
-                            products.map((product, idx) => (
+                            products.map((product) => (
                                 <tr key={product.id}>
-                                    <td>{idx + 1}</td>
-                                    <td>{product.nama}</td>
-                                    <td>{product.category.nama}</td>
-                                    <td>Rp {product.harga.toLocaleString()}</td>
+                                    <td>{product.buyer_sku_code}</td>
+                                    {/* <td> <TruncateText text={product.id} maxLength={10} /> </td> */}
+                                    <td>{product.product_name}</td>
+                                    <td>{product.brand_info?.name}</td>
+                                    <td>Rp {product.price.toLocaleString()}</td>
                                     <td>
-                                        <span className={`badge ${product.status ? "badge-success" : "badge-error"}`}>
-                                            {product.status ? "Aktif" : "Nonaktif"}
+                                        <span className={`badge ${product.unlimited_stock || product.stock > 0 ? "badge-success" : "badge-error"}`}>
+                                            {product.unlimited_stock || product.stock > 0 ? "Aktif" : "Nonaktif"}
                                         </span>
                                     </td>
                                     <td>
@@ -109,7 +115,7 @@ export default function ProductInfo() {
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
                 onConfirm={confirmDelete}
-                productName={selectedProduct?.nama || ""}
+                productName={selectedProduct?.product_name || ""}
             />
         </div>
     )
