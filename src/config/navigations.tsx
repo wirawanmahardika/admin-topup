@@ -1,26 +1,28 @@
-import { BarChart3, CreditCard, Package, } from 'lucide-react'
-import type { JSX } from 'react';
+import { Cloud, Database, Home,  } from "lucide-react";
 
-const navigations: { title: string; icon: JSX.Element, to?: string; navs?: any[] }[] = [
-    {
-        title: "Dashboard",
-        to: "/",
-        icon: <BarChart3 />
-    },
-    {
-        title: "Product",
-        to: "/product",
-        icon: <Package />,
-        // navs: [
-        //     { to: "/product", name: "info" },
-        //     { to: "/product/create", name: "create" }
-        // ]
-    },
-    {
-        title: "Transaksi",
-        to: "/transaksi",
-        icon: <CreditCard />
-    },
-]
-
-export default navigations
+export default [
+  {
+    section: "Main",
+    icon: <Home size={16} />,
+    navs: [
+      { name: "Dashboard", to: "/" },
+    ],
+  },
+  {
+    section: "Digiflazz",
+    icon: <Cloud size={16} />,
+    navs: [
+      { name: "Produk", to: "/product" },
+      { name: "Brand", to: "/brand" },
+    ],
+  },
+  {
+    section: "Manual",
+    icon: <Database size={16} />,
+    navs: [
+      { name: "Produk Manual", to: "/products" },
+      { name: "Kategori", to: "/categories" },
+      { name: "Order Manual", to: "/orders" },
+    ],
+  },
+];

@@ -1,60 +1,43 @@
-import { ArrowLeft } from "lucide-react"
-import { useState, type JSX } from "react"
-import { AnimatePresence, motion } from 'framer-motion'
+import {  type JSX } from "react"
 import { NavLink } from "react-router-dom"
 import navigations from "../config/navigations"
 
-export default function Sidebar({ children }: { children: JSX.Element[] }) {
-    return <div className="flex flex-col h-full">
-        <div className="p-3 bg-base-300 text-center font-bold text-2xl">ADMIN</div>
-
-        {navigations.map((n, i) => {
-            if (n.navs) return <NavDropDown key={i} icon={n.icon} title={n.title} navigations={n.navs} />
-            if (n.to) return <Nav key={i} icon={n.icon} title={n.title} to={n.to} />
-        })}
-
-        {children}
-    </div>
-}
-
-const Nav = ({ title, to, icon }: { title: string; to: string; icon: JSX.Element }) => {
-    return <NavLink to={to} className="bg-base-300 p-2 cursor-pointer hover:bg-base-100 ">
-        <div className="flex gap-x-2 items-center">
-            {icon}
-            <span className="font-semibold mr-auto">{title}</span>
-        </div>
-    </NavLink>
-}
-
-const NavDropDown = ({ title, icon, navigations}: { title: string; icon: JSX.Element; navigations: { name: string; to: string; }[] }) => {
-    const [open, setOpen] = useState(false)
-
-    return <>
-        <div className="bg-base-300 p-2 cursor-pointer hover:bg-base-100 ">
-            <div onClick={() => setOpen(p => !p)} className="flex gap-x-2 items-center">
-                {icon}
-                <span className="font-semibold mr-auto">{title}</span>
-                <motion.div animate={{ rotate: open ? '-90deg' : "0deg" }} >
-                    <ArrowLeft />
-                </motion.div>
+export default function Sidebar({ children }: { children?: JSX.Element[] }) {
+    return (
+        <div className="flex flex-col h-full bg-base-200 shadow-lg rounded-r-2xl overflow-hidden">
+            <div className="p-4 bg-base-300 text-center font-extrabold text-2xl tracking-widest border-b border-base-100">
+                ADMIN
             </div>
-        </div>
-
-        <AnimatePresence initial={false}>
-            {open && (
-                <motion.div
-                    layout
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="h-full font-medium overflow-hidden"
-                >
-                    <div className="flex pl-10 p-2 flex-col gap-y-1">
-                        {navigations.map((n, i) => <NavLink key={i} className={"hover:text-gray-500"} to={n.to}>{n.name}</NavLink>)}
+            <nav className="flex-1 py-4 px-2 space-y-4">
+                {navigations.map((section, i) => (
+                    <div key={i}>
+                        <div className="flex items-center gap-2 px-3 py-1 text-xs font-bold text-gray-400 uppercase tracking-wide">
+                            {section.icon}
+                            {section.section}
+                        </div>
+                        <div className="flex flex-col gap-1 mt-1">
+                            {section.navs.map((n, j) => (
+                                <NavLink
+                                    key={j}
+                                    to={n.to}
+                                    className={({ isActive }) =>
+                                        "flex items-center gap-2 rounded-lg px-4 py-2 transition-all duration-150 " +
+                                        (isActive
+                                            ? "bg-primary/10 border-l-4 border-primary text-primary font-bold shadow"
+                                            : "hover:bg-base-100 text-base-content")
+                                    }
+                                >
+                                    <span>{n.name}</span>
+                                </NavLink>
+                            ))}
+                        </div>
+                        {i < navigations.length - 1 && (
+                            <div className="my-3 border-t border-base-300" />
+                        )}
                     </div>
-                </motion.div>
-            )}
-        </AnimatePresence>
-    </>
+                ))}
+            </nav>
+            <div className="p-2">{children}</div>
+        </div>
+    );
 }
