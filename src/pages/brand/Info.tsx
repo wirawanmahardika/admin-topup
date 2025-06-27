@@ -2,6 +2,7 @@ import { useEffect, useReducer, useState } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import type { brandType } from "../../types/brandType";
+import TruncateText from "../../components/TruncateText";
 
 // Modal sederhana untuk konfirmasi hapus
 function ConfirmModal({
@@ -92,9 +93,9 @@ export default function BrandInfo() {
                                 <td colSpan={7} className="text-center text-gray-400">Belum ada brand</td>
                             </tr>
                         ) : (
-                            brands.map((brand, idx) => (
+                            brands.map((brand) => (
                                 <tr key={brand.id}>
-                                    <td>{idx + 1}</td>
+                                    <td><TruncateText text={brand.id} maxLength={20} /> </td>
                                     <td>{brand.name}</td>
                                     <td>
                                         <img src={brand.image} alt={brand.name} className="w-12 h-12 object-contain rounded" />
@@ -104,6 +105,12 @@ export default function BrandInfo() {
                                     <td>{new Date(brand.updated_at).toLocaleString()}</td>
                                     <td>
                                         <NavLink to={"edit/" + brand.id} className="btn btn-xs btn-outline mr-2">Edit</NavLink>
+                                        <NavLink
+                                            to={`/brand/${brand.id}`}
+                                            className="btn btn-xs btn-info mr-2"
+                                        >
+                                            Lihat Produk
+                                        </NavLink>
                                         <button
                                             className="btn btn-xs btn-error"
                                             onClick={() => handleDelete(brand)}

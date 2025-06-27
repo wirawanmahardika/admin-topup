@@ -12,15 +12,15 @@ export default [
     section: "Digiflazz",
     icon: <Cloud size={16} />,
     navs: [
-      { name: "Produk", to: "/product" },
-      { name: "Brand", to: "/brand" },
+      { name: "Produk", to: "/products" },
+      { name: "Brand", to: "/brands" },
     ],
   },
   {
     section: "Manual",
     icon: <Database size={16} />,
     navs: [
-      { name: "Produk Manual", to: "/products" },
+      { name: "Produk Manual", to: "/productasdf" },
       { name: "Kategori", to: "/categories" },
       { name: "Order Manual", to: "/orders" },
     ],

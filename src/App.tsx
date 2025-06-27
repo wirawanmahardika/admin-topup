@@ -13,6 +13,7 @@ import TambahProduct from "./pages/product/Tambah";
 import EditProduct from "./pages/product/Edit";
 import TransaksiInfo from "./pages/transaksi/Info";
 import BrandInfo from "./pages/brand/Info";
+import BrandProductDetail from "./pages/brand/ProductDetail";
 
 const router = createBrowserRouter(
 // const router = createHashRouter(
@@ -22,11 +23,12 @@ const router = createBrowserRouter(
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
 
-        <Route path="product" element={<ProductInfo />} />
+        <Route path="products" element={<ProductInfo />} />
         <Route path="product/tambah" element={<TambahProduct />} />
         <Route path="product/edit/:id" element={<EditProduct />} />
 
-        <Route path="brand" element={<BrandInfo />} />
+        <Route path="brands" element={<BrandInfo />} />
+        <Route path="brand/:id" element={<BrandProductDetail />} />
 
         <Route path="transaksi" element={<TransaksiInfo />} />
       </Route>
