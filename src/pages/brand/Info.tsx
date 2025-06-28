@@ -106,7 +106,7 @@ export default function BrandInfo() {
                                     <td>
                                         <NavLink to={"edit/" + brand.id} className="btn btn-xs btn-outline mr-2">Edit</NavLink>
                                         <NavLink
-                                            to={`/brand/${brand.id}`}
+                                            to={`/brand/${brand.id}/products`}
                                             className="btn btn-xs btn-info mr-2"
                                         >
                                             Lihat Produk
