@@ -14,13 +14,15 @@ export default function BrandProductDetail() {
         fetchProducts();
     }, [id]);
 
-    const fetchProducts = () => {
+    const fetchProducts = async () => {
         if (!id) return;
-        axios.get(`http://localhost:3000/products/${id}`)
-            .then(res => {
-                setProducts(res.data.data.products || []);
-                setBrandName(res.data.data.name || "");
-            });
+        try {
+            const res = await axios.get(`http://localhost:3000/products/${id}`)
+            setProducts(res.data.data.products || []);
+            setBrandName(res.data.data.name || "");
+        } catch (error) {
+            alert('gagal fetch  produk')
+        }
     };
 
     const handleSync = async () => {
@@ -29,8 +31,9 @@ export default function BrandProductDetail() {
         try {
             await axios.put(`http://localhost:3000/brand/${id}/products`);
             fetchProducts(); // refresh data setelah sync
-        } catch (err) {
-            alert("Gagal update data produk!");
+            alert("Berhasil update product");
+        } catch (err: any) {
+            alert(err.response?.data?.message ?? "Gagal update data produk!");
         }
         setLoading(false);
     };
@@ -58,7 +61,8 @@ export default function BrandProductDetail() {
                             <th>#</th>
                             <th>Nama Produk</th>
                             <th>Kategori</th>
-                            <th>Harga</th>
+                            <th>Harga Resell</th>
+                            <th>Harga Asli</th>
                             <th>Stok</th>
                             <th>Aksi</th>
                         </tr>
@@ -74,6 +78,7 @@ export default function BrandProductDetail() {
                                     <td>{idx + 1}</td>
                                     <td>{product.product_name}</td>
                                     <td>{product.category}</td>
+                                    <td>{product.resell_price ? <span>Rp {(product.resell_price).toLocaleString('id')}</span> : "Belum Diatur"}</td>
                                     <td>Rp {(product.price).toLocaleString('id')}</td>
                                     <td>{product.unlimited_stock ? <Infinity /> : product.stock}</td>
                                     <td>

@@ -7,6 +7,7 @@ export type productType = {
     type: string;
     seller_name: string;
     price: number,
+    resell_price: number,
     buyer_sku_code: string;
     buyer_product_status: boolean,
     seller_product_status: boolean,

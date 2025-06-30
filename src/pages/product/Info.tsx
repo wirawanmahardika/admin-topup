@@ -73,7 +73,8 @@ export default function ProductInfo() {
                             <th>#</th>
                             <th>Nama Produk</th>
                             <th>Game</th>
-                            <th>Harga</th>
+                            <th>Harga Resell</th>
+                            <th>Harga Asli</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -87,9 +88,9 @@ export default function ProductInfo() {
                             products.map((product) => (
                                 <tr key={product.id}>
                                     <td>{product.buyer_sku_code}</td>
-                                    {/* <td> <TruncateText text={product.id} maxLength={10} /> </td> */}
                                     <td>{product.product_name}</td>
                                     <td>{product.brand_info?.name}</td>
+                                    <td>{product.resell_price ? <span>Rp {(product.resell_price).toLocaleString('id')}</span> : "Belum Diatur"}</td>
                                     <td>Rp {product.price.toLocaleString()}</td>
                                     <td>
                                         <span className={`badge ${product.unlimited_stock || product.stock > 0 ? "badge-success" : "badge-error"}`}>
