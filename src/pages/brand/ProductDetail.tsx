@@ -3,6 +3,8 @@ import { useParams, NavLink } from "react-router-dom";
 import type { productType } from "../../types/productType";
 import { Infinity, RefreshCw } from "lucide-react";
 import { AxiosAuth } from "../../utils/axios";
+import { errorToast, loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
+import { ToastContainer } from "react-toastify";
 
 export default function BrandProductDetail() {
     const { id } = useParams();
@@ -20,26 +22,28 @@ export default function BrandProductDetail() {
             const res = await AxiosAuth.get(`/products/${id}`)
             setProducts(res.data.data.products || []);
             setBrandName(res.data.data.name || "");
-        } catch (error) {
-            alert('gagal fetch  produk')
+        } catch (error: any) {
+            errorToast(error.response?.data?.message ?? "Gagal fetch product")
         }
     };
 
     const handleSync = async () => {
         if (!id) return;
         setLoading(true);
+        const idToast = loadingToast()
         try {
-            await AxiosAuth.put(`/brand/${id}/products`);
-            fetchProducts(); // refresh data setelah sync
-            alert("Berhasil update product");
+            const res = await AxiosAuth.put(`/brand/${id}/products`);
+            loadingSuccessToast(idToast, res.data.message ?? "Berhasil update product dari brand " + brandName)
+            await fetchProducts(); // refresh data setelah sync
         } catch (err: any) {
-            alert(err.response?.data?.message ?? "Gagal update data produk!");
+            loadingErrorToast(idToast, err.response?.data?.message ?? "Gagal update data produk!");
         }
         setLoading(false);
     };
 
     return (
         <div className="bg-base-100 rounded-lg shadow p-6">
+            <ToastContainer />
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Produk dari Brand: {brandName}</h2>
                 <div className="flex gap-2">
