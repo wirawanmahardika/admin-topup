@@ -3,14 +3,31 @@ import dayjs from "dayjs"
 import * as XLSX from "xlsx";
 import type { transactionType } from "../../types/transactionType";
 import { AxiosAuth } from "../../utils/axios";
+import { ToastContainer } from "react-toastify";
+import { errorToast } from "../../utils/toast";
 
-// Badge untuk topup_status
-function TopupStatusBadge({ status }: { status: transactionType["topup_status"] }) {
-    if (status === "sukses")
-        return <span className="badge badge-success">Berhasil</span>;
-    if (status === "pending")
-        return <span className="badge badge-warning">Pending</span>;
-    return <span className="badge badge-error">Gagal</span>;
+
+function TopupStatusSelect({
+    value,
+    onChange,
+    disabled,
+}: {
+    value: transactionType["topup_status"];
+    onChange: (val: transactionType["topup_status"]) => void;
+    disabled?: boolean;
+}) {
+    return (
+        <select
+            className={`select select-xs ${value === "sukses" ? "select-success" : value === "pending" ? "select-warning" : "select-error"}`}
+            value={value}
+            onChange={e => onChange(e.target.value as transactionType["topup_status"])}
+            disabled={disabled}
+        >
+            <option value="sukses">Sukses</option>
+            <option value="pending">Pending</option>
+            <option value="gagal">Gagal</option>
+        </select>
+    );
 }
 
 // Badge untuk payment_status sesuai style Midtrans
@@ -44,6 +61,16 @@ export default function TransaksiInfo() {
             .then(res => { setTransactions(res.data.data); })
     }, [])
 
+    // Handler update topup_status
+    const handleUpdateTopupStatus = async (trxId: string, newStatus: transactionType["topup_status"]) => {
+        try {
+            await AxiosAuth.patch(`/transaction/${trxId}/topup-status`, { status: newStatus });
+            setTransactions(prev => prev.map(trx => trx.id === trxId ? { ...trx, topup_status: newStatus } : trx));
+        } catch (err) {
+            errorToast("Gagal update status!");
+        }
+    };
+
     // Filter transaksi berdasarkan pencarian dan status
     const filtered = useMemo(() => {
         return transactions.filter(trx =>
@@ -61,6 +88,7 @@ export default function TransaksiInfo() {
         const data = filtered.map(trx => ({
             "ID": trx.id,
             "Nomor Customer": trx.customer_number,
+            "Product": trx.product?.product_name,
             "Brand": trx.brand?.name,
             "Profit": trx.profit,
             "Operator": trx.brand?.operator ?? "-",
@@ -76,6 +104,7 @@ export default function TransaksiInfo() {
 
     return (
         <div className="bg-base-100 rounded-lg shadow p-6">
+            <ToastContainer />
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
                 <h2 className="text-xl font-bold">Daftar Transaksi</h2>
                 <div className="flex flex-col md:flex-row gap-2 md:items-center">
@@ -92,7 +121,7 @@ export default function TransaksiInfo() {
                         onChange={e => setStatusFilter(e.target.value as transactionType["topup_status"] | "")}
                     >
                         <option value="">Semua Status</option>
-                        <option value="sukses">Berhasil</option>
+                        <option value="sukses">Sukses</option>
                         <option value="pending">Pending</option>
                         <option value="gagal">Gagal</option>
                     </select>
@@ -123,29 +152,34 @@ export default function TransaksiInfo() {
                                 <td colSpan={10} className="text-center text-gray-400">Belum ada transaksi</td>
                             </tr>
                         ) : (
-                            filtered.map((trx) => (
-                                <tr key={trx.id}>
-                                    <td>{trx.id}</td>
-                                    <td>{trx.customer_number}</td>
-                                    <td>{trx.product?.product_name}</td>
-                                    <td>{trx.brand?.name}</td>
-                                    <td>Rp {trx.profit.toLocaleString()}</td>
-                                    <td>{dayjs(trx.created_at).format("D MMMM YYYY, HH:mm ")}</td>
-                                    <td>
-                                        <span className={`badge ${trx.brand?.operator === "sistem" ? "badge-info" : "badge-secondary"}`}>
-                                            {trx.brand?.operator === "sistem" ? "Sistem" : "Manual"}
-                                        </span>
-                                    </td>
-                                    <td><PaymentStatusBadge status={trx.payment_status} /></td>
-                                    <td><TopupStatusBadge status={trx.topup_status} /></td>
-                                    <td>
-                                        <div className="flex gap-x-2">
-                                            <div className="btn btn-primary">Edit</div>
-                                            <div className="btn btn-error">Hapus</div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
+                            filtered.map((trx) => {
+                                return (
+                                    <tr key={trx.id}>
+                                        <td>{trx.id}</td>
+                                        <td>{trx.customer_number}</td>
+                                        <td>{trx.product?.product_name}</td>
+                                        <td>{trx.brand?.name}</td>
+                                        <td>Rp {trx.profit.toLocaleString()}</td>
+                                        <td>{dayjs(trx.created_at).format("D MMMM YYYY, HH:mm ")}</td>
+                                        <td>
+                                            <span className={`badge ${trx.brand?.operator === "sistem" ? "badge-info" : "badge-secondary"}`}>
+                                                {trx.brand?.operator === "sistem" ? "Sistem" : "Manual"}
+                                            </span>
+                                        </td>
+                                        <td><PaymentStatusBadge status={trx.payment_status} /></td>
+                                        <td>
+                                            <TopupStatusSelect
+                                                value={trx.topup_status}
+                                                onChange={val => handleUpdateTopupStatus(trx.id, val)}
+                                                disabled={trx.brand?.operator === "sistem"}
+                                            />
+                                        </td>
+                                        <td>
+                                            <div className="btn btn-error btn-sm">Hapus</div>
+                                        </td>
+                                    </tr>
+                                )
+                            })
                         )}
                     </tbody>
                 </table>
