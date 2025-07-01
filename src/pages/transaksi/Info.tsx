@@ -1,52 +1,10 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as XLSX from "xlsx";
+import type { transactionType } from "../../types/transactionType";
+import { AxiosAuth } from "../../utils/axios";
 
-type Transaction = {
-    id: number;
-    user: string;
-    product: string;
-    game: string;
-    amount: number;
-    price: number;
-    status: "pending" | "success" | "failed";
-    date: string;
-};
-
-const dummyTransactions: Transaction[] = [
-    {
-        id: 1,
-        user: "Budi",
-        product: "86 Diamonds",
-        game: "Mobile Legends",
-        amount: 1,
-        price: 20000,
-        status: "success",
-        date: "2025-06-17 10:12",
-    },
-    {
-        id: 2,
-        user: "Siti",
-        product: "70 Diamonds",
-        game: "Free Fire",
-        amount: 2,
-        price: 30000,
-        status: "pending",
-        date: "2025-06-17 11:05",
-    },
-    {
-        id: 3,
-        user: "Andi",
-        product: "60 UC",
-        game: "PUBG Mobile",
-        amount: 1,
-        price: 17000,
-        status: "failed",
-        date: "2025-06-16 21:30",
-    },
-];
-
-function StatusBadge({ status }: { status: Transaction["status"] }) {
-    if (status === "success")
+function StatusBadge({ status }: { status: transactionType["topup_status"] }) {
+    if (status === "sukses")
         return <span className="badge badge-success">Berhasil</span>;
     if (status === "pending")
         return <span className="badge badge-warning">Pending</span>;
@@ -54,28 +12,36 @@ function StatusBadge({ status }: { status: Transaction["status"] }) {
 }
 
 export default function TransaksiInfo() {
-    const [transactions] = useState<Transaction[]>(dummyTransactions);
+    const [transactions, setTransactions] = useState<transactionType[]>([]);
     const [search, setSearch] = useState("");
-    const [statusFilter, setStatusFilter] = useState<"" | Transaction["status"]>("");
+    const [statusFilter, setStatusFilter] = useState<"" | transactionType["topup_status"]>("");
+
+    useEffect(() => {
+        AxiosAuth.get("/transactions")
+            .then(res => { setTransactions(res.data.data); })
+    }, [])
 
     // Filter transaksi berdasarkan pencarian dan status
-    const filtered = transactions.filter(trx =>
-        (trx.user.toLowerCase().includes(search.toLowerCase()) ||
-            trx.product.toLowerCase().includes(search.toLowerCase()) ||
-            trx.game.toLowerCase().includes(search.toLowerCase())) &&
-        (statusFilter === "" || trx.status === statusFilter)
-    );
+    const filtered = useMemo(() => {
+        return transactions.filter(trx =>
+            (
+                trx.customer_number.toLowerCase().includes(search.toLowerCase()) ||
+                trx.id.toLowerCase().includes(search.toLowerCase()) ||
+                trx.id_brand.toLowerCase().includes(search.toLowerCase())
+            ) &&
+            (statusFilter === "" || trx.topup_status === statusFilter)
+        )
+    }, [search, transactions, statusFilter]);
 
     // Fungsi untuk export ke XLSX
     const handleExportXLSX = () => {
         const data = filtered.map(trx => ({
-            "User": trx.user,
-            "Produk": trx.product,
-            "Game": trx.game,
-            "Jumlah": trx.amount,
-            "Harga": trx.price,
-            "Status": trx.status,
-            "Tanggal": trx.date,
+            "ID": trx.id,
+            "Nama": trx.customer_number,
+            "Brand": trx.id_brand,
+            "Profit": trx.profit,
+            "Status": trx.topup_status,
+            "Tanggal Dibuat": trx.created_at,
         }));
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
@@ -91,19 +57,19 @@ export default function TransaksiInfo() {
                     <input
                         type="text"
                         className="input input-bordered"
-                        placeholder="Cari user, produk, atau game"
+                        placeholder="Cari ID, Brand, atau Customer"
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                     />
                     <select
                         className="select select-bordered"
                         value={statusFilter}
-                        onChange={e => setStatusFilter(e.target.value as Transaction["status"] | "")}
+                        onChange={e => setStatusFilter(e.target.value as transactionType["topup_status"] | "")}
                     >
                         <option value="">Semua Status</option>
-                        <option value="success">Berhasil</option>
+                        <option value="sukses">Berhasil</option>
                         <option value="pending">Pending</option>
-                        <option value="failed">Gagal</option>
+                        <option value="gagal">Gagal</option>
                     </select>
                     <button className="btn btn-success" onClick={handleExportXLSX}>
                         Unduh XLSX
@@ -114,32 +80,28 @@ export default function TransaksiInfo() {
                 <table className="table w-full">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>User</th>
-                            <th>Produk</th>
-                            <th>Game</th>
-                            <th>Jumlah</th>
-                            <th>Harga</th>
+                            <th>ID</th>
+                            <th>Nomor Customer</th>
+                            <th>Brand</th>
+                            <th>Profit</th>
                             <th>Status</th>
-                            <th>Tanggal</th>
+                            <th>Tanggal Dibuat</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filtered.length === 0 ? (
                             <tr>
-                                <td colSpan={8} className="text-center text-gray-400">Belum ada transaksi</td>
+                                <td colSpan={6} className="text-center text-gray-400">Belum ada transaksi</td>
                             </tr>
                         ) : (
-                            filtered.map((trx, idx) => (
+                            filtered.map((trx) => (
                                 <tr key={trx.id}>
-                                    <td>{idx + 1}</td>
-                                    <td>{trx.user}</td>
-                                    <td>{trx.product}</td>
-                                    <td>{trx.game}</td>
-                                    <td>{trx.amount}</td>
-                                    <td>Rp {trx.price.toLocaleString()}</td>
-                                    <td><StatusBadge status={trx.status} /></td>
-                                    <td>{trx.date}</td>
+                                    <td>{trx.id}</td>
+                                    <td>{trx.customer_number}</td>
+                                    <td>{trx.brand?.name}</td>
+                                    <td>Rp {trx.profit.toLocaleString()}</td>
+                                    <td><StatusBadge status={trx.topup_status} /></td>
+                                    <td>{trx.created_at}</td>
                                 </tr>
                             ))
                         )}
@@ -147,5 +109,5 @@ export default function TransaksiInfo() {
                 </table>
             </div>
         </div>
-    );
+    )
 }

@@ -1,3 +1,15 @@
+import type { brandType } from "./brandType"
+
 export type transactionType = {
-    
+    id: string,
+    id_product: string,
+    id_brand: string,
+    customer_number: string,
+    buyer_sku_code: string,
+    profit: number,
+    payment_status: string,
+    topup_status: string,
+    created_at: string,
+    updated_at: string,
+    brand?: brandType,
 }

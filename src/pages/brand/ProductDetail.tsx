@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, NavLink } from "react-router-dom";
-import axios from "axios";
 import type { productType } from "../../types/productType";
 import { Infinity, RefreshCw } from "lucide-react";
+import { AxiosAuth } from "../../utils/axios";
 
 export default function BrandProductDetail() {
     const { id } = useParams();
@@ -17,7 +17,7 @@ export default function BrandProductDetail() {
     const fetchProducts = async () => {
         if (!id) return;
         try {
-            const res = await axios.get(`http://localhost:3000/products/${id}`)
+            const res = await AxiosAuth.get(`/products/${id}`)
             setProducts(res.data.data.products || []);
             setBrandName(res.data.data.name || "");
         } catch (error) {
@@ -29,7 +29,7 @@ export default function BrandProductDetail() {
         if (!id) return;
         setLoading(true);
         try {
-            await axios.put(`http://localhost:3000/brand/${id}/products`);
+            await AxiosAuth.put(`/brand/${id}/products`);
             fetchProducts(); // refresh data setelah sync
             alert("Berhasil update product");
         } catch (err: any) {

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 import { ToastContainer } from "react-toastify";
+import { AxiosAuth } from "../../utils/axios";
 
 export default function TambahBrand() {
     const [name, setName] = useState("");
@@ -24,7 +24,7 @@ export default function TambahBrand() {
 
         const idToast = loadingToast()
         try {
-            await axios.post("http://localhost:3000/brand", formData, { headers: { "Content-Type": "multipart/form-data" } });
+            await AxiosAuth.post("/brand", formData, { headers: { "Content-Type": "multipart/form-data" } });
             navigate("/brands");
         } catch (err: any) {
             loadingErrorToast(idToast, err.response?.data?.message ?? "Gagal menambah brand!")
@@ -36,7 +36,7 @@ export default function TambahBrand() {
         setLoadingProducts(true);
         const idToast = loadingToast("sedang mengambil data product dengan brand " + name)
         try {
-            const res = await axios.get("http://localhost:3000/products/digiflazz", { params: { brand: name } });
+            const res = await AxiosAuth.get("/products/digiflazz", { params: { brand: name } });
             setProducts(JSON.stringify(res.data.data));
             loadingSuccessToast(idToast, res.data.message)
         } catch (error: any) {

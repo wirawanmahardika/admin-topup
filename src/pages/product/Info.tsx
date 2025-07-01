@@ -1,8 +1,8 @@
 import { useEffect, useReducer, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { productReducer } from "../../hooks/reducer/product";
-import axios from 'axios'
 import type { productType } from "../../types/productType";
+import { AxiosAuth } from "../../utils/axios";
 
 // Modal sederhana
 function ConfirmModal({
@@ -37,7 +37,7 @@ export default function ProductInfo() {
     const [selectedProduct, setSelectedProduct] = useState<productType | null>(null);
 
     useEffect(() => {
-        axios.get("http://localhost:3000/products").then(res => {
+        AxiosAuth.get("/products").then(res => {
             console.log(res.data.data);
             
             dispatch({ type: "get-all", payload: res.data.data })
@@ -98,7 +98,7 @@ export default function ProductInfo() {
                                         </span>
                                     </td>
                                     <td>
-                                        <NavLink to={"edit/" + product.id} className="btn btn-xs btn-outline mr-2">Edit</NavLink>
+                                        <NavLink to={"/product/edit/" + product.id} className="btn btn-xs btn-outline mr-2">Edit</NavLink>
                                         <button
                                             className="btn btn-xs btn-error"
                                             onClick={() => handleDelete(product)}

@@ -1,8 +1,8 @@
 import { useEffect, useReducer, useState } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "axios";
 import type { brandType } from "../../types/brandType";
 import TruncateText from "../../components/TruncateText";
+import { AxiosAuth } from "../../utils/axios";
 
 // Modal sederhana untuk konfirmasi hapus
 function ConfirmModal({
@@ -49,7 +49,7 @@ export default function BrandInfo() {
     const [selectedBrand, setSelectedBrand] = useState<brandType | null>(null);
 
     useEffect(() => {
-        axios.get("http://localhost:3000/brands").then(res => {
+        AxiosAuth.get("/brands").then(res => {
             dispatch({ type: "get-all", payload: res.data.data });
         });
     }, []);

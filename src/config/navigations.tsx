@@ -6,6 +6,7 @@ export default [
     icon: <Home size={16} />,
     navs: [
       { name: "Dashboard", to: "/" },
+      { name: "Transaksi", to: "/transaksi" },
     ],
   },
   {
