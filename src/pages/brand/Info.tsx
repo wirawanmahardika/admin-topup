@@ -104,7 +104,7 @@ export default function BrandInfo() {
                                     <td>{new Date(brand.created_at).toLocaleString()}</td>
                                     <td>{new Date(brand.updated_at).toLocaleString()}</td>
                                     <td>
-                                        <NavLink to={"edit/" + brand.id} className="btn btn-xs btn-outline mr-2">Edit</NavLink>
+                                        <NavLink to={"/brand/edit/" + brand.id} className="btn btn-xs btn-outline mr-2">Edit</NavLink>
                                         <NavLink
                                             to={`/brand/${brand.id}/products`}
                                             className="btn btn-xs btn-info mr-2"
