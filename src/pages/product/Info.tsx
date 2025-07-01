@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import { productReducer } from "../../hooks/reducer/product";
 import type { productType } from "../../types/productType";
 import { AxiosAuth } from "../../utils/axios";
+import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
+import { ToastContainer } from "react-toastify";
 
 // Modal sederhana
 function ConfirmModal({
@@ -44,24 +46,30 @@ export default function ProductInfo() {
         })
     }, [])
 
-    console.log(products);
-    
-
     const handleDelete = (product: productType) => {
         setSelectedProduct(product);
         setModalOpen(true);
     };
 
-    const confirmDelete = () => {
+    const confirmDelete = async () => {
         if (selectedProduct) {
-            dispatch({ type: "delete", payload: selectedProduct.id });
-            setModalOpen(false);
-            setSelectedProduct(null);
+            const idToast = loadingToast()
+            try {
+                const res = await AxiosAuth.delete("/product/" + selectedProduct.id)
+                dispatch({ type: "delete", payload: selectedProduct.id });
+                loadingSuccessToast(idToast, res.data.message)
+                setModalOpen(false);
+                setSelectedProduct(null);
+            } catch (error: any) {
+                loadingErrorToast(idToast, error.response?.data?.message ?? "Terjadi kesalahan ketika menghapus product")
+            }
+
         }
     };
 
     return (
         <div className="bg-base-100 rounded-lg shadow p-6">
+            <ToastContainer />
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Daftar Produk Topup Game</h2>
                 <NavLink to={"/product/tambah"} className="btn btn-primary">Tambah Produk</NavLink>
