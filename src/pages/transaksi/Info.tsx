@@ -1,14 +1,37 @@
 import { useEffect, useMemo, useState } from "react";
+import dayjs from "dayjs"
 import * as XLSX from "xlsx";
 import type { transactionType } from "../../types/transactionType";
 import { AxiosAuth } from "../../utils/axios";
 
-function StatusBadge({ status }: { status: transactionType["topup_status"] }) {
+// Badge untuk topup_status
+function TopupStatusBadge({ status }: { status: transactionType["topup_status"] }) {
     if (status === "sukses")
         return <span className="badge badge-success">Berhasil</span>;
     if (status === "pending")
         return <span className="badge badge-warning">Pending</span>;
     return <span className="badge badge-error">Gagal</span>;
+}
+
+// Badge untuk payment_status sesuai style Midtrans
+function PaymentStatusBadge({ status }: { status: transactionType["payment_status"] }) {
+    switch (status) {
+        case "settlement":
+        case "capture":
+            return <span className="badge badge-success">Berhasil</span>;
+        case "pending":
+            return <span className="badge badge-warning">Pending</span>;
+        case "deny":
+        case "cancel":
+        case "expire":
+        case "failure":
+            return <span className="badge badge-error capitalize">{status}</span>;
+        case "refund":
+        case "partial_refund":
+            return <span className="badge badge-info capitalize">{status.replace("_", " ")}</span>;
+        default:
+            return <span className="badge badge-ghost">{status}</span>;
+    }
 }
 
 export default function TransaksiInfo() {
@@ -37,10 +60,12 @@ export default function TransaksiInfo() {
     const handleExportXLSX = () => {
         const data = filtered.map(trx => ({
             "ID": trx.id,
-            "Nama": trx.customer_number,
-            "Brand": trx.id_brand,
+            "Nomor Customer": trx.customer_number,
+            "Brand": trx.brand?.name,
             "Profit": trx.profit,
-            "Status": trx.topup_status,
+            "Operator": trx.brand?.operator ?? "-",
+            "Payment Status": trx.payment_status,
+            "Topup Status": trx.topup_status,
             "Tanggal Dibuat": trx.created_at,
         }));
         const ws = XLSX.utils.json_to_sheet(data);
@@ -81,27 +106,44 @@ export default function TransaksiInfo() {
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nomor Customer</th>
+                            <th>No Customer</th>
+                            <th>Product</th>
                             <th>Brand</th>
                             <th>Profit</th>
-                            <th>Status</th>
                             <th>Tanggal Dibuat</th>
+                            <th>Operator</th>
+                            <th>Payment Status</th>
+                            <th>Topup Status</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filtered.length === 0 ? (
                             <tr>
-                                <td colSpan={6} className="text-center text-gray-400">Belum ada transaksi</td>
+                                <td colSpan={10} className="text-center text-gray-400">Belum ada transaksi</td>
                             </tr>
                         ) : (
                             filtered.map((trx) => (
                                 <tr key={trx.id}>
                                     <td>{trx.id}</td>
                                     <td>{trx.customer_number}</td>
+                                    <td>{trx.product?.product_name}</td>
                                     <td>{trx.brand?.name}</td>
                                     <td>Rp {trx.profit.toLocaleString()}</td>
-                                    <td><StatusBadge status={trx.topup_status} /></td>
-                                    <td>{trx.created_at}</td>
+                                    <td>{dayjs(trx.created_at).format("D MMMM YYYY, HH:mm ")}</td>
+                                    <td>
+                                        <span className={`badge ${trx.brand?.operator === "sistem" ? "badge-info" : "badge-secondary"}`}>
+                                            {trx.brand?.operator === "sistem" ? "Sistem" : "Manual"}
+                                        </span>
+                                    </td>
+                                    <td><PaymentStatusBadge status={trx.payment_status} /></td>
+                                    <td><TopupStatusBadge status={trx.topup_status} /></td>
+                                    <td>
+                                        <div className="flex gap-x-2">
+                                            <div className="btn btn-primary">Edit</div>
+                                            <div className="btn btn-error">Hapus</div>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))
                         )}

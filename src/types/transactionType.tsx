@@ -1,4 +1,5 @@
 import type { brandType } from "./brandType"
+import type { productType } from "./productType"
 
 export type transactionType = {
     id: string,
@@ -12,4 +13,5 @@ export type transactionType = {
     created_at: string,
     updated_at: string,
     brand?: brandType,
+    product?:productType
 }
