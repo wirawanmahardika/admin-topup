@@ -5,6 +5,7 @@ import type { productType } from "../../types/productType";
 import { AxiosAuth } from "../../utils/axios";
 import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 import { ToastContainer } from "react-toastify";
+import TruncateText from "../../components/TruncateText";
 
 // Modal sederhana
 function ConfirmModal({
@@ -41,7 +42,7 @@ export default function ProductInfo() {
     useEffect(() => {
         AxiosAuth.get("/products").then(res => {
             console.log(res.data.data);
-            
+
             dispatch({ type: "get-all", payload: res.data.data })
         })
     }, [])
@@ -95,7 +96,7 @@ export default function ProductInfo() {
                         ) : (
                             products.map((product) => (
                                 <tr key={product.id}>
-                                    <td>{product.buyer_sku_code}</td>
+                                    <td><TruncateText maxLength={20} text={product.id}/></td>
                                     <td>{product.product_name}</td>
                                     <td>{product.brand_info?.name}</td>
                                     <td>{product.resell_price ? <span>Rp {(product.resell_price).toLocaleString('id')}</span> : "Belum Diatur"}</td>

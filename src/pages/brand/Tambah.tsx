@@ -185,11 +185,11 @@ export default function TambahBrand() {
         formData.append("name", name);
         if (image) formData.append("image", image);
         formData.append("popularity", popularity.toString());
+        // Tambahkan operator sesuai tab
+        formData.append("operator", tab === "thirdparty" ? "sistem" : "manual");
         if (tab === "thirdparty") {
-            // Kirim semua field third party + resell_price yang sudah diedit admin
             formData.append("products", JSON.stringify(products));
         } else {
-            // Manual: hanya field yang diperlukan
             const readyManual = manualProducts.map(p => ({
                 product_name: p.product_name,
                 resell_price: p.resell_price,
@@ -202,8 +202,6 @@ export default function TambahBrand() {
 
         const idToast = loadingToast();
         try {
-            formData.forEach((v, k) => { console.log(v, k) })
-
             await AxiosAuth.post("/brand", formData, { headers: { "Content-Type": "multipart/form-data" } });
             navigate("/brands");
         } catch (err: any) {

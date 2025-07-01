@@ -4,6 +4,7 @@ export type brandType = {
     id: string;
     name: string;
     image: string;
+    operator: string;
     popularity: number;
     created_at: string;
     updated_at: string;

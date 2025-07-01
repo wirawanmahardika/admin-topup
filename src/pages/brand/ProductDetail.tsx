@@ -5,26 +5,24 @@ import { Infinity, RefreshCw } from "lucide-react";
 import { AxiosAuth } from "../../utils/axios";
 import { errorToast, loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 import { ToastContainer } from "react-toastify";
+import type { brandType } from "../../types/brandType";
 
 export default function BrandProductDetail() {
     const { id } = useParams();
     const [products, setProducts] = useState<productType[]>([]);
-    const [brandName, setBrandName] = useState<string>("");
+    const [brand, setBrand] = useState<brandType | null>(null)
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetchProducts();
     }, [id]);
 
-    console.log(products);
-    
-
     const fetchProducts = async () => {
         if (!id) return;
         try {
             const res = await AxiosAuth.get(`/products/${id}`)
             setProducts(res.data.data.products || []);
-            setBrandName(res.data.data.name || "");
+            setBrand(res.data.data)
         } catch (error: any) {
             errorToast(error.response?.data?.message ?? "Gagal fetch product")
         }
@@ -36,7 +34,7 @@ export default function BrandProductDetail() {
         const idToast = loadingToast()
         try {
             const res = await AxiosAuth.put(`/brand/${id}/products`);
-            loadingSuccessToast(idToast, res.data.message ?? "Berhasil update product dari brand " + brandName)
+            loadingSuccessToast(idToast, res.data.message ?? "Berhasil update product dari brand " + brand?.name)
             await fetchProducts(); // refresh data setelah sync
         } catch (err: any) {
             loadingErrorToast(idToast, err.response?.data?.message ?? "Gagal update data produk!");
@@ -48,7 +46,7 @@ export default function BrandProductDetail() {
         <div className="bg-base-100 rounded-lg shadow p-6">
             <ToastContainer />
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">Produk dari Brand: {brandName}</h2>
+                <h2 className="text-xl font-bold">Produk dari Brand: {brand?.name}</h2>
                 <div className="flex gap-2">
                     <button
                         className="btn btn-accent flex items-center gap-2"
@@ -67,7 +65,7 @@ export default function BrandProductDetail() {
                         <tr>
                             <th>#</th>
                             <th>Nama Produk</th>
-                            <th>Kategori</th>
+                            <th>Operator</th>
                             <th>Harga Resell</th>
                             <th>Harga Asli</th>
                             <th>Stok</th>
@@ -84,9 +82,9 @@ export default function BrandProductDetail() {
                                 <tr key={product.id}>
                                     <td>{idx + 1}</td>
                                     <td>{product.product_name}</td>
-                                    <td>{product.category}</td>
+                                    <td>{brand?.operator}</td>
                                     <td>{product.resell_price ? <span>Rp {(product.resell_price).toLocaleString('id')}</span> : "Belum Diatur"}</td>
-                                    <td>Rp {(product.price).toLocaleString('id')}</td>
+                                    <td>{product.price ?  <span>Rp {(product.price).toLocaleString('id')}</span> : "Tidak Diatur"}</td>
                                     <td>{product.unlimited_stock ? <Infinity /> : product.stock}</td>
                                     <td>
                                         <NavLink to={`/products/edit/${product.id}`} className="btn btn-xs btn-outline mr-2">Edit</NavLink>

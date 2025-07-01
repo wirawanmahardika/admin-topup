@@ -1,3 +1,5 @@
+import type { brandType } from "./brandType";
+
 export type productType = {
     id: string;
     id_brand: string;
@@ -19,14 +21,7 @@ export type productType = {
     desc: string;
     created_at: string;
     updated_at: string;
-    brand_info?: {
-        id: string;
-        name: string;
-        image: string;
-        popularity: number,
-        created_at: string;
-        updated_at: string;
-    }
+    brand_info?: brandType
 }
 
 export type productReducerActionType = {
