@@ -16,6 +16,9 @@ export default function BrandProductDetail() {
         fetchProducts();
     }, [id]);
 
+    console.log(products);
+    
+
     const fetchProducts = async () => {
         if (!id) return;
         try {
