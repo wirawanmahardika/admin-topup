@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 import type { transactionType } from "../../types/transactionType";
 import { AxiosAuth } from "../../utils/axios";
 import { ToastContainer } from "react-toastify";
-import { errorToast } from "../../utils/toast";
+import { errorToast, loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 
 
 function TopupStatusSelect({
@@ -70,6 +70,18 @@ export default function TransaksiInfo() {
             errorToast("Gagal update status!");
         }
     };
+    
+    // handle delete transaction
+    const handleDeleteTransaction = async (id: string) => {
+        const idToast = loadingToast()
+        try {
+            await AxiosAuth.delete("/transaction/" + id)
+            loadingSuccessToast(idToast, "Berhasil menghapus transaksi " + id)
+                    setTransactions(prev => prev.filter(trx => trx.id !== id));
+        } catch (error: any) {
+            loadingErrorToast(idToast, error.response?.data?.message ?? "Gagal menghapus transaksi " + id)
+        }
+    }
 
     // Filter transaksi berdasarkan pencarian dan status
     const filtered = useMemo(() => {
@@ -157,8 +169,8 @@ export default function TransaksiInfo() {
                                     <tr key={trx.id}>
                                         <td>{trx.id}</td>
                                         <td>{trx.customer_number}</td>
-                                        <td>{trx.product?.product_name}</td>
-                                        <td>{trx.brand?.name}</td>
+                                        <td>{trx.product?.product_name ?? <span className="italic text-red-300">None</span>}</td>
+                                        <td>{trx.brand?.name ?? <span className="italic text-red-300">None</span>}</td>
                                         <td>Rp {trx.profit.toLocaleString()}</td>
                                         <td>{dayjs(trx.created_at).format("D MMMM YYYY, HH:mm ")}</td>
                                         <td>
@@ -175,7 +187,7 @@ export default function TransaksiInfo() {
                                             />
                                         </td>
                                         <td>
-                                            <div className="btn btn-error btn-sm">Hapus</div>
+                                            <div onClick={() => handleDeleteTransaction(trx.id)} className="btn btn-error btn-sm">Hapus</div>
                                         </td>
                                     </tr>
                                 )
