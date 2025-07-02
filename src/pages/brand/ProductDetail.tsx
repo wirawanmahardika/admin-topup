@@ -42,6 +42,17 @@ export default function BrandProductDetail() {
         setLoading(false);
     };
 
+    const handleHapus = async (id: string) => {
+        const idToast = loadingToast()
+        try {
+            const res = await AxiosAuth.delete("/product/" + id)
+            loadingSuccessToast(idToast, res.data.message)
+            setProducts((v) =>  v.filter(value => value.id !== id))
+        } catch (error: any) {
+            loadingErrorToast(idToast, error.response?.data?.message ?? "Gagal menghapus product")
+        }
+    }
+
     return (
         <div className="bg-base-100 rounded-lg shadow p-6">
             <ToastContainer />
@@ -87,7 +98,8 @@ export default function BrandProductDetail() {
                                     <td>{product.price ?  <span>Rp {(product.price).toLocaleString('id')}</span> : "Tidak Diatur"}</td>
                                     <td>{product.unlimited_stock ? <Infinity /> : product.stock}</td>
                                     <td>
-                                        <NavLink to={`/products/edit/${product.id}`} className="btn btn-xs btn-outline mr-2">Edit</NavLink>
+                                        <button onClick={() => handleHapus(product.id)} className="btn btn-error btn-xs mr-2">Hapus</button>
+                                        <NavLink to={`/product/edit/${product.id}`} className="btn btn-xs btn-outline mr-2">Edit</NavLink>
                                     </td>
                                 </tr>
                             ))

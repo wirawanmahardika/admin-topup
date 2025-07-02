@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import type { brandType } from "../../types/brandType";
 import TruncateText from "../../components/TruncateText";
 import { AxiosAuth } from "../../utils/axios";
+import { loadingSuccessToast, loadingToast } from "../../utils/toast";
+import { ToastContainer } from "react-toastify";
 
 // Modal sederhana untuk konfirmasi hapus
 function ConfirmModal({
@@ -59,10 +61,16 @@ export default function BrandInfo() {
         setModalOpen(true);
     };
 
-    const confirmDelete = () => {
+    const confirmDelete = async () => {
         if (selectedBrand) {
-            // Panggil API hapus jika perlu
-            dispatch({ type: "delete", payload: selectedBrand.id });
+            const idToast = loadingToast()
+            try {
+                const res= await AxiosAuth.delete("/brand/"+selectedBrand.id)
+                loadingSuccessToast(idToast, res.data.message)
+                dispatch({ type: "delete", payload: selectedBrand.id });
+            } catch (error: any) {
+                loadingSuccessToast(idToast, error.response?.data?.message ?? "Terjadi kesalahan saat menghapus brand")
+            }
             setModalOpen(false);
             setSelectedBrand(null);
         }
@@ -70,6 +78,7 @@ export default function BrandInfo() {
 
     return (
         <div className="bg-base-100 rounded-lg shadow p-6">
+            <ToastContainer />
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Daftar Brand Game</h2>
                 <NavLink to={"/brand/tambah"} className="btn btn-primary">Tambah Brand</NavLink>
