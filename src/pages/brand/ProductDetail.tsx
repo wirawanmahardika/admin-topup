@@ -80,6 +80,7 @@ export default function BrandProductDetail() {
                             <th>Harga Resell</th>
                             <th>Harga Asli</th>
                             <th>Stok</th>
+                            <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -97,6 +98,11 @@ export default function BrandProductDetail() {
                                     <td>{product.resell_price ? <span>Rp {(product.resell_price).toLocaleString('id')}</span> : "Belum Diatur"}</td>
                                     <td>{product.price ?  <span>Rp {(product.price).toLocaleString('id')}</span> : "Tidak Diatur"}</td>
                                     <td>{product.unlimited_stock ? <Infinity /> : product.stock}</td>
+                                    <td>
+                                        <span className={`badge ${product.unlimited_stock || product.stock > 0 ? "badge-success" : "badge-error"}`}>
+                                            {product.unlimited_stock || product.stock > 0 ? "Aktif" : "Nonaktif"}
+                                        </span>
+                                    </td>
                                     <td>
                                         <button onClick={() => handleHapus(product.id)} className="btn btn-error btn-xs mr-2">Hapus</button>
                                         <NavLink to={`/product/edit/${product.id}`} className="btn btn-xs btn-outline mr-2">Edit</NavLink>

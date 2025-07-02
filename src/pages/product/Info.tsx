@@ -18,7 +18,7 @@ type ConfirmModalProps = {
 function ConfirmModal({ open, onClose, onConfirm, productName }: ConfirmModalProps) {
     if (!open) return null;
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-opacity-40">
             <div className="bg-base-100 rounded-lg shadow-lg p-6 w-full max-w-xs">
                 <h3 className="font-bold text-lg mb-2">Konfirmasi Hapus</h3>
                 <p className="mb-4">
