@@ -7,11 +7,17 @@ import { errorToast, loadingErrorToast, loadingSuccessToast, loadingToast } from
 import { ToastContainer } from "react-toastify";
 import type { brandType } from "../../types/brandType";
 
+
 export default function BrandProductDetail() {
     const { id } = useParams();
     const [products, setProducts] = useState<productType[]>([]);
     const [brand, setBrand] = useState<brandType | null>(null)
     const [loading, setLoading] = useState(false);
+
+    // Filter states
+    const [search, setSearch] = useState("");
+    const [status, setStatus] = useState(""); // "aktif", "nonaktif", ""
+    const [resellPrice, setResellPrice] = useState(""); // "null", "notnull", ""
 
     useEffect(() => {
         fetchProducts();
@@ -41,7 +47,7 @@ export default function BrandProductDetail() {
         }
         setLoading(false);
     };
-
+    
     const handleHapus = async (id: string) => {
         const idToast = loadingToast()
         try {
@@ -52,6 +58,24 @@ export default function BrandProductDetail() {
             loadingErrorToast(idToast, error.response?.data?.message ?? "Gagal menghapus product")
         }
     }
+
+    // Filter logic
+    const filteredProducts = products.filter((product) => {
+        // Filter nama produk
+        const matchName = product.product_name.toLowerCase().includes(search.toLowerCase());
+        // Filter status aktif/nonaktif
+        const isAktif = product.unlimited_stock || product.stock > 0;
+        const matchStatus = !status ||
+            (status === "aktif" && isAktif) ||
+            (status === "nonaktif" && !isAktif);
+        // Filter harga resell
+        const matchResell =
+            !resellPrice ||
+            (resellPrice === "null" && (product.resell_price === null || product.resell_price === undefined)) ||
+            (resellPrice === "notnull" && product.resell_price !== null && product.resell_price !== undefined);
+
+        return matchName && matchStatus && matchResell;
+    });
 
     return (
         <div className="bg-base-100 rounded-lg shadow p-6">
@@ -70,6 +94,34 @@ export default function BrandProductDetail() {
                     <NavLink to="/brands" className="btn btn-secondary">Kembali ke Brand</NavLink>
                 </div>
             </div>
+            {/* Filter */}
+            <div className="flex flex-col md:flex-row gap-2 mb-4">
+                <input
+                    type="text"
+                    className="input input-bordered"
+                    placeholder="Cari nama produk..."
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                />
+                <select
+                    className="select select-bordered"
+                    value={status}
+                    onChange={e => setStatus(e.target.value)}
+                >
+                    <option value="">Semua Status</option>
+                    <option value="aktif">Aktif</option>
+                    <option value="nonaktif">Nonaktif</option>
+                </select>
+                <select
+                    className="select select-bordered"
+                    value={resellPrice}
+                    onChange={e => setResellPrice(e.target.value)}
+                >
+                    <option value="">Semua Harga Resell</option>
+                    <option value="notnull">Ada Harga Resell</option>
+                    <option value="null">Tanpa Harga Resell</option>
+                </select>
+            </div>
             <div className="overflow-x-auto">
                 <table className="table w-full">
                     <thead>
@@ -85,12 +137,12 @@ export default function BrandProductDetail() {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.length === 0 ? (
+                        {filteredProducts.length === 0 ? (
                             <tr>
-                                <td colSpan={6} className="text-center text-gray-400">Belum ada produk</td>
+                                <td colSpan={8} className="text-center text-gray-400">Belum ada produk</td>
                             </tr>
                         ) : (
-                            products.map((product, idx) => (
+                            filteredProducts.map((product, idx) => (
                                 <tr key={product.id}>
                                     <td>{idx + 1}</td>
                                     <td>{product.product_name}</td>

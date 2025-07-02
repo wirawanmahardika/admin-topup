@@ -55,6 +55,8 @@ export default function TransaksiInfo() {
     const [transactions, setTransactions] = useState<transactionType[]>([]);
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState<"" | transactionType["topup_status"]>("");
+    const [operatorFilter, setOperatorFilter] = useState<"" | "sistem" | "manual">("");
+    const [paymentStatusFilter, setPaymentStatusFilter] = useState<string>("");
 
     useEffect(() => {
         AxiosAuth.get("/transactions")
@@ -70,30 +72,34 @@ export default function TransaksiInfo() {
             errorToast("Gagal update status!");
         }
     };
-    
+
     // handle delete transaction
     const handleDeleteTransaction = async (id: string) => {
         const idToast = loadingToast()
         try {
             await AxiosAuth.delete("/transaction/" + id)
             loadingSuccessToast(idToast, "Berhasil menghapus transaksi " + id)
-                    setTransactions(prev => prev.filter(trx => trx.id !== id));
+            setTransactions(prev => prev.filter(trx => trx.id !== id));
         } catch (error: any) {
             loadingErrorToast(idToast, error.response?.data?.message ?? "Gagal menghapus transaksi " + id)
         }
     }
 
-    // Filter transaksi berdasarkan pencarian dan status
+    // Filter transaksi berdasarkan pencarian, status, operator, dan payment status
     const filtered = useMemo(() => {
         return transactions.filter(trx =>
             (
                 trx.customer_number.toLowerCase().includes(search.toLowerCase()) ||
                 trx.id.toLowerCase().includes(search.toLowerCase()) ||
-                trx.id_brand.toLowerCase().includes(search.toLowerCase())
+                trx.id_brand.toLowerCase().includes(search.toLowerCase()) ||
+                trx.brand?.name?.toLowerCase().includes(search.toLowerCase()) ||
+                trx.product?.product_name?.toLowerCase().includes(search.toLowerCase())
             ) &&
-            (statusFilter === "" || trx.topup_status === statusFilter)
+            (statusFilter === "" || trx.topup_status === statusFilter) &&
+            (operatorFilter === "" || trx.brand?.operator === operatorFilter) &&
+            (paymentStatusFilter === "" || trx.payment_status === paymentStatusFilter)
         )
-    }, [search, transactions, statusFilter]);
+    }, [search, transactions, statusFilter, operatorFilter, paymentStatusFilter]);
 
     // Fungsi untuk export ke XLSX
     const handleExportXLSX = () => {
@@ -123,7 +129,7 @@ export default function TransaksiInfo() {
                     <input
                         type="text"
                         className="input input-bordered"
-                        placeholder="Cari ID, Brand, atau Customer"
+                        placeholder="Cari ID, Brand, Produk, atau Customer"
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                     />
@@ -132,10 +138,35 @@ export default function TransaksiInfo() {
                         value={statusFilter}
                         onChange={e => setStatusFilter(e.target.value as transactionType["topup_status"] | "")}
                     >
-                        <option value="">Semua Status</option>
+                        <option value="">Semua Topup Status</option>
                         <option value="sukses">Sukses</option>
                         <option value="pending">Pending</option>
                         <option value="gagal">Gagal</option>
+                    </select>
+                    <select
+                        className="select select-bordered"
+                        value={operatorFilter}
+                        onChange={e => setOperatorFilter(e.target.value as "sistem" | "manual" | "")}
+                    >
+                        <option value="">Semua Operator</option>
+                        <option value="sistem">Sistem</option>
+                        <option value="manual">Manual</option>
+                    </select>
+                    <select
+                        className="select select-bordered"
+                        value={paymentStatusFilter}
+                        onChange={e => setPaymentStatusFilter(e.target.value)}
+                    >
+                        <option value="">Semua Payment Status</option>
+                        <option value="settlement">Berhasil</option>
+                        <option value="capture">Capture</option>
+                        <option value="pending">Pending</option>
+                        <option value="deny">Deny</option>
+                        <option value="cancel">Cancel</option>
+                        <option value="expire">Expire</option>
+                        <option value="failure">Failure</option>
+                        <option value="refund">Refund</option>
+                        <option value="partial_refund">Partial Refund</option>
                     </select>
                     <button className="btn btn-success" onClick={handleExportXLSX}>
                         Unduh XLSX
