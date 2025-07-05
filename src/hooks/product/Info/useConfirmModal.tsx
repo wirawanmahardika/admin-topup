@@ -1,6 +1,6 @@
 // hooks/useConfirmModal.ts
 import { useState } from "react";
-import type { productType } from "../../types/productType";
+import type { productType } from "../../../types/productType";
 
 export const useConfirmModal = () => {
     const [isOpen, setIsOpen] = useState(false);

@@ -1,6 +1,6 @@
 // hooks/useProductFilters.ts
 import { useMemo, useState } from "react";
-import type { productType } from "../../types/productType";
+import type { productType } from "../../../types/productType";
 
 interface ProductFilterState {
     search: string;

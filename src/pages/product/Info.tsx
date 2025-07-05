@@ -2,11 +2,11 @@
 import { NavLink } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import type { productType } from "../../types/productType";
-import { useProducts } from "../../hooks/product/useProducts";
-import { useProductFilters } from "../../hooks/product/useProductFilters";
-import { ConfirmModal, useConfirmModal } from "../../hooks/product/useConfirmModal";
-import { ProductFilters } from "../../components/product/ProductFilters";
-import { ProductTable } from "../../components/product/ProductTable";
+import { useProducts } from "../../hooks/product/Info/useProducts";
+import { ProductFilters } from "../../components/product/Info/ProductFilters";
+import { ProductTable } from "../../components/product/Info/ProductTable";
+import { useProductFilters } from "../../hooks/product/Info/useProductFilters";
+import { ConfirmModal, useConfirmModal } from "../../hooks/product/Info/useConfirmModal";
 
 export default function ProductInfo() {
     const { products, isLoading, deleteProduct } = useProducts();

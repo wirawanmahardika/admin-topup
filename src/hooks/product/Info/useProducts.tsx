@@ -1,8 +1,8 @@
 // hooks/useProducts.ts
 import { useEffect, useReducer, useState } from "react";
-import { productReducer } from "../../hooks/reducer/product";
-import { AxiosAuth } from "../../utils/axios";
-import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
+import { productReducer } from "../../reducer/product";
+import { AxiosAuth } from "../../../utils/axios";
+import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../../utils/toast";
 
 export const useProducts = () => {
     const [products, dispatch] = useReducer(productReducer, []);

@@ -1,7 +1,7 @@
 // components/ProductTable.tsx
 import { NavLink } from "react-router-dom";
-import type { productType } from "../../types/productType";
-import TruncateText from "../../components/TruncateText";
+import type { productType } from "../../../types/productType";
+import TruncateText from "../../TruncateText";
 import { ProductStatusBadge } from "./ProductStatusBadge";
 import { ProductResellPrice } from "./ProductResellPrice";
 
