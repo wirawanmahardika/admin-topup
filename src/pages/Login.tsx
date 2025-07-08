@@ -1,19 +1,31 @@
 import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../utils/toast"
 import { ToastContainer } from "react-toastify"
 import { useNavigate } from "react-router-dom"
-import TestRequestServer from "../utils/test"
+import axios from "axios"
+import { useEffect } from "react"
 
 export default function Login() {
     const navigate = useNavigate()
-    const loginHandler = async (e:any) => {
+
+    useEffect(() => {
+        if(localStorage.getItem("token")) navigate('/')
+    }, [])
+
+    const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const idToast = loadingToast()
+        const idToast = loadingToast("Memeriksa kredensial...")
+        const body = {
+            email : e.currentTarget.email.value,
+            password : e.currentTarget.password.value,
+        }
+
         try {
-            const res = await TestRequestServer(true)
-            loadingSuccessToast(idToast, res)
-            setTimeout(() => { navigate('/') }, 5000);
+            const res = await axios.post(import.meta.env.VITE_SERVER_URL + "/login", body)
+            localStorage.setItem("token", res.data.token)
+            loadingSuccessToast(idToast, res.data.message)
+            navigate("/")
         } catch (error: any) {
-            loadingErrorToast(idToast, error)
+            loadingErrorToast(idToast, error.response?.data.message ?? "Terjadi kesalahan")
         }
     }
 

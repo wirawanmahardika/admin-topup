@@ -4,8 +4,10 @@ import { LogOut, Menu } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from 'framer-motion';
 import ModalConfirmation, { openModal } from "./Modal";
+import useAuth from "../hooks/useAuth";
 
 export default function Layout() {
+    useAuth()
     const navigate = useNavigate()
     const [open, setOpen] = useState(true)
     const logout = () => { localStorage.clear(); navigate("/login") }
