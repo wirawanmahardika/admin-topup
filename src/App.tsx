@@ -16,6 +16,8 @@ import BrandInfo from "./pages/brand/Info";
 import BrandProductDetail from "./pages/brand/ProductDetail";
 import TambahBrand from "./pages/brand/Tambah";
 import EditBrand from "./pages/brand/Edit";
+import ProfileInfo from "./pages/profile/Info";
+import EditProfil from "./pages/profile/Edit";
 
 const router = createBrowserRouter(
 // const router = createHashRouter(
@@ -24,6 +26,9 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
+
+        <Route path="profile" element={<ProfileInfo />} />
+        <Route path="profile/edit" element={<EditProfil />} />
 
         <Route path="products" element={<ProductInfo />} />
         <Route path="product/tambah" element={<TambahProduct />} />

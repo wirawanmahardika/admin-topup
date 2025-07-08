@@ -12,6 +12,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@mui/material": "^7.2.0",
     "@tailwindcss/vite": "^4.1.6",
     "axios": "^1.10.0",
     "chart.js": "^4.5.0",

@@ -1,67 +1,52 @@
-import { Bounce, toast, type Id } from "react-toastify";
+// utils/toast.ts
+import { Bounce, toast, type Id, type ToastOptions } from "react-toastify";
 
-export function loadingToast(text: string = "Sedang Proses") {
-    return toast.loading(text, {position: "bottom-center", theme: "dark"})
+const defaultOptions: ToastOptions = {
+    position: "bottom-center",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: false,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+    transition: Bounce,
+};
+
+export function loadingToast(text = "Sedang Proses", toastId?: Id): Id {
+    if (toastId && toast.isActive(toastId)) return toastId;
+    return toast.loading(text, { ...defaultOptions, toastId });
 }
 
-export function loadingSuccessToast(id: Id, text:string) {
+export function loadingSuccessToast(id: Id, text: string) {
     toast.update(id, {
+        ...defaultOptions,
         isLoading: false,
-        type:"success",
+        type: "success",
         render: text,
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-    })
+    });
 }
 
-export function loadingErrorToast(id: Id, text:string) {
+export function loadingErrorToast(id: Id, text: string) {
     toast.update(id, {
+        ...defaultOptions,
         isLoading: false,
-        render: text,
         type: "error",
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-    })
-}
-
-export function successToast(text: string) {
-    toast.success(text, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
+        render: text,
     });
 }
 
-export function errorToast(text: string) {
-    toast.error(text, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-    });
+export function successToast(text: string, toastId?: Id) {
+    if (toastId && toast.isActive(toastId)) return;
+    toast.success(text, { ...defaultOptions, toastId });
+}
+
+export function errorToast(text: string, toastId?: Id) {
+    if (toastId && toast.isActive(toastId)) return;
+    toast.error(text, { ...defaultOptions, toastId });
+}
+
+export function warnToast(text: string, toastId?: Id) {
+    if (toastId && toast.isActive(toastId)) return;
+    toast.warn(text, { ...defaultOptions, toastId });
 }

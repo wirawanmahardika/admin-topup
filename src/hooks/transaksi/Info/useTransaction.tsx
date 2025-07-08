@@ -1,7 +1,7 @@
 // hooks/useTransactions.ts
 import { useEffect, useState } from "react";
 import { AxiosAuth } from "../../../utils/axios";
-import { errorToast, loadingErrorToast, loadingSuccessToast, loadingToast } from "../../../utils/toast";
+import { errorToast, loadingErrorToast, loadingSuccessToast, loadingToast, warnToast } from "../../../utils/toast";
 import type { transactionType } from "../../../types/transactionType";
 
 export const useTransactions = () => {
@@ -10,11 +10,12 @@ export const useTransactions = () => {
 
     const fetchTransactions = async () => {
         setIsLoading(true);
+        const toastId = "txError"
         try {
             const res = await AxiosAuth.get("/transactions");
             setTransactions(res.data.data);
-        } catch (error) {
-            errorToast("Gagal memuat transaksi");
+        } catch (error: any) {
+            warnToast(error.response?.data.message ?? "gagal memuat transaksi", toastId);
         } finally {
             setIsLoading(false);
         }
