@@ -26,7 +26,7 @@ export default function BrandProductDetail() {
     const fetchProducts = async () => {
         if (!id) return;
         try {
-            const res = await AxiosAuth.get(`/products/${id}`)
+            const res = await AxiosAuth.get(`/brand/${id}/products`)
             setProducts(res.data.data.products || []);
             setBrand(res.data.data)
         } catch (error: any) {

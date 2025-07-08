@@ -216,6 +216,7 @@ export default function TambahBrand() {
         const idToast = loadingToast("sedang mengambil data product dengan brand " + name);
         try {
             const res = await AxiosAuth.get("/products/digiflazz", { params: { brand: name } });
+            
             // Map ke ThirdPartyProduct dan tambahkan resell_price default 0
             const arr = (res.data.data as any[]).map((p: any) => ({
                 ...p,
