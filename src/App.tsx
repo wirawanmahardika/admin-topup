@@ -18,6 +18,7 @@ import TambahBrand from "./pages/brand/Tambah";
 import EditBrand from "./pages/brand/Edit";
 import ProfileInfo from "./pages/profile/Info";
 import EditProfil from "./pages/profile/Edit";
+import TambahSaldo from "./pages/profile/TambahSaldo";
 
 const router = createBrowserRouter(
 // const router = createHashRouter(
@@ -43,6 +44,7 @@ const router = createBrowserRouter(
 
         <Route path="profile" element={<ProfileInfo />} />
         <Route path="edit-profile" element={<EditProfil />} />
+        <Route path="tambah-saldo" element={<TambahSaldo />} />
       </Route>
     </>
   )

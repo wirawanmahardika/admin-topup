@@ -29,6 +29,7 @@ export default [
     navs: [
       { name: "Info", to: "/profile" },
       { name: "Edit", to: "/edit-profile" },
+      { name: "Tambah Saldo", to: "/tambah-saldo" },
     ],
   },
 ];

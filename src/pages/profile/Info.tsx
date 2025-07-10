@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { AxiosAuth } from "../../utils/axios";
+import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
+import { ToastContainer } from "react-toastify";
 
 type ProfilType = {
     fullname: string;
@@ -11,19 +13,27 @@ type ProfilType = {
 export default function ProfileInfo() {
     const [profil, setProfil] = useState<ProfilType | null>(null);
 
-
     useEffect(() => {
-        AxiosAuth.get("/user/data")
-            .then(res => {
-                setProfil(res.data.data)
-            })
+        AxiosAuth.get("/user/data").then(res => { setProfil(res.data.data) })
     }, []);
 
-    console.log(profil);
-    
+    const handleRefreshSaldo = async () => {
+        const idToast = loadingToast()
+        try {
+            const res = await AxiosAuth.get("/user/saldo")
+            setProfil(prev => {
+                if(!prev) return null
+                return {...prev, saldo: res.data.data}
+            })
+            loadingSuccessToast(idToast, res.data.message)
+        } catch (error: any) {
+            loadingErrorToast(idToast, error.response?.data.message ?? "Terjadi kesalahan")
+        }
+    }
 
     return (
         <div className="flex justify-center items-center min-h-[60vh] bg-base-200">
+            <ToastContainer />
             <div className="bg-white dark:bg-base-100 rounded-2xl shadow-xl p-8 w-full max-w-lg border border-base-300">
                 <div className="flex flex-col items-center mb-6">
                     <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center text-white text-3xl font-bold shadow-lg mb-3">
@@ -46,9 +56,12 @@ export default function ProfileInfo() {
                         </div>
                         <div className="flex justify-between items-center border-b pb-2">
                             <span className="font-semibold text-gray-600">Saldo</span>
-                            <span className="text-primary font-bold text-lg">
-                                Rp {profil.saldo.toLocaleString("id")}
-                            </span>
+                            <div className="space-x-3">
+                                <span className="text-primary font-bold text-lg">
+                                    Rp {profil.saldo.toLocaleString("id")}
+                                </span>
+                                <button onClick={handleRefreshSaldo} className="btn btn-sm btn-primary">Refresh</button>
+                            </div>
                         </div>
                     </div>
                 )}
