@@ -7,11 +7,15 @@ interface TopupStatusSelectProps {
 }
 
 export const TopupStatusSelect = ({ value, onChange, disabled }: TopupStatusSelectProps) => {
+    console.log(value);
+    
     const getSelectClass = () => {
+        console.log(value);
+        
         switch (value) {
-            case "sukses": return "select select-xs select-success";
-            case "pending": return "select select-xs select-warning";
-            case "gagal": return "select select-xs select-error";
+            case "Sukses": return "select select-xs select-success";
+            case "Pending": return "select select-xs select-warning";
+            case "Gagal": return "select select-xs select-error";
             default: return "select select-xs";
         }
     };
@@ -20,12 +24,13 @@ export const TopupStatusSelect = ({ value, onChange, disabled }: TopupStatusSele
         <select
             className={getSelectClass()}
             value={value}
-            onChange={e => onChange(e.target.value as transactionType["topup_status"])}
+            onChange={e => {
+                onChange(e.target.value as transactionType["topup_status"])}}
             disabled={disabled}
         >
-            <option value="sukses">Sukses</option>
-            <option value="pending">Pending</option>
-            <option value="gagal">Gagal</option>
+            <option value="Sukses">Sukses</option>
+            <option value="Pending">Pending</option>
+            <option value="Gagal">Gagal</option>
         </select>
     );
 };

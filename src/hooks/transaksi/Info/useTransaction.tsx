@@ -1,7 +1,7 @@
 // hooks/useTransactions.ts
 import { useEffect, useState } from "react";
 import { AxiosAuth } from "../../../utils/axios";
-import { errorToast, loadingErrorToast, loadingSuccessToast, loadingToast, warnToast } from "../../../utils/toast";
+import { loadingErrorToast, loadingSuccessToast, loadingToast, warnToast } from "../../../utils/toast";
 import type { transactionType } from "../../../types/transactionType";
 
 export const useTransactions = () => {
@@ -22,13 +22,13 @@ export const useTransactions = () => {
     };
 
     const updateTopupStatus = async (trxId: string, newStatus: transactionType["topup_status"]) => {
+        const toastId = loadingToast("Sedang memproses update status transaksi ke " + newStatus)
         try {
-            await AxiosAuth.patch(`/transaction/${trxId}/topup-status`, { status: newStatus });
-            setTransactions(prev => 
-                prev.map(trx => trx.id === trxId ? { ...trx, topup_status: newStatus } : trx)
-            );
+            const res = await AxiosAuth.patch(`/transaction/${trxId}/topup-status`, { status: newStatus });
+            setTransactions(prev => prev.map(trx => trx.id === trxId ? { ...trx, topup_status: newStatus } : trx));
+            loadingSuccessToast(toastId, res.data.message);
         } catch (err) {
-            errorToast("Gagal update status!");
+            loadingErrorToast(toastId, "Gagal update status!");
         }
     };
 
