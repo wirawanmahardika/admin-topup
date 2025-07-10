@@ -31,13 +31,13 @@ const router = createBrowserRouter(
         <Route path="profile/edit" element={<EditProfil />} />
 
         <Route path="products" element={<ProductInfo />} />
-        <Route path="product/tambah" element={<TambahProduct />} />
         <Route path="product/edit/:id" element={<EditProduct />} />
 
         <Route path="brands" element={<BrandInfo />} />
         <Route path="brand/tambah" element={<TambahBrand />} />
         <Route path="brand/:id/products" element={<BrandProductDetail />} />
         <Route path="brand/edit/:id" element={<EditBrand />} />
+        <Route path="brand/:id/product/tambah" element={<TambahProduct />} />
 
         <Route path="transaksi" element={<TransaksiInfo />} />
 

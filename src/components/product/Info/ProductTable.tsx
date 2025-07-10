@@ -52,7 +52,7 @@ export const ProductTable = ({ products, isLoading, onDeleteProduct }: ProductTa
                                 <td>
                                     <ProductResellPrice resellPrice={product.resell_price} />
                                 </td>
-                                <td>Rp {product.price.toLocaleString()}</td>
+                                <td>{product.price ? `Rp ${product.price.toLocaleString()}` : "Tidak Diatur"}</td>
                                 <td>
                                     <ProductStatusBadge product={product} />
                                 </td>

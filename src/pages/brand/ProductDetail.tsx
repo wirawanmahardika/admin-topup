@@ -13,6 +13,8 @@ export default function BrandProductDetail() {
     const [products, setProducts] = useState<productType[]>([]);
     const [brand, setBrand] = useState<brandType | null>(null)
     const [loading, setLoading] = useState(false);
+    console.log(brand);
+
 
     // Filter states
     const [search, setSearch] = useState("");
@@ -47,13 +49,13 @@ export default function BrandProductDetail() {
         }
         setLoading(false);
     };
-    
+
     const handleHapus = async (id: string) => {
         const idToast = loadingToast()
         try {
             const res = await AxiosAuth.delete("/product/" + id)
             loadingSuccessToast(idToast, res.data.message)
-            setProducts((v) =>  v.filter(value => value.id !== id))
+            setProducts((v) => v.filter(value => value.id !== id))
         } catch (error: any) {
             loadingErrorToast(idToast, error.response?.data?.message ?? "Gagal menghapus product")
         }
@@ -83,14 +85,20 @@ export default function BrandProductDetail() {
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Produk dari Brand: {brand?.name}</h2>
                 <div className="flex gap-2">
-                    <button
-                        className="btn btn-accent flex items-center gap-2"
-                        onClick={handleSync}
-                        disabled={loading}
-                    >
-                        <RefreshCw className={loading ? "animate-spin" : ""} size={16} />
-                        {loading ? "Memperbarui..." : "Update Produk"}
-                    </button>
+                    {brand?.operator === "manual" ?
+                        <NavLink to={`/brand/${id}/product/tambah`} className="btn btn-primary flex items-center gap-2" >
+                            Tambah Produk
+                        </NavLink>
+                        :
+                        <button
+                            className="btn btn-accent flex items-center gap-2"
+                            onClick={handleSync}
+                            disabled={loading}
+                        >
+                            <RefreshCw className={loading ? "animate-spin" : ""} size={16} />
+                            {loading ? "Memperbarui..." : "Update Produk"}
+                        </button>
+                    }
                     <NavLink to="/brands" className="btn btn-secondary">Kembali ke Brand</NavLink>
                 </div>
             </div>
@@ -148,7 +156,7 @@ export default function BrandProductDetail() {
                                     <td>{product.product_name}</td>
                                     <td>{brand?.operator}</td>
                                     <td>{product.resell_price ? <span>Rp {(product.resell_price).toLocaleString('id')}</span> : "Belum Diatur"}</td>
-                                    <td>{product.price ?  <span>Rp {(product.price).toLocaleString('id')}</span> : "Tidak Diatur"}</td>
+                                    <td>{product.price ? <span>Rp {(product.price).toLocaleString('id')}</span> : "Tidak Diatur"}</td>
                                     <td>{product.unlimited_stock ? <Infinity /> : product.stock}</td>
                                     <td>
                                         <span className={`badge ${product.unlimited_stock || product.stock > 0 ? "badge-success" : "badge-error"}`}>
