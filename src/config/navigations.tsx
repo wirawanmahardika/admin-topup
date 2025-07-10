@@ -1,4 +1,4 @@
-import { Home, Package, FileText } from "lucide-react";
+import { Home, Package, FileText, User } from "lucide-react";
 
 export default [
   {
@@ -21,6 +21,14 @@ export default [
     navs: [
       { name: "Produk", to: "/products" },
       { name: "Brand", to: "/brands" },
+    ],
+  },
+  {
+    section: "Profil",
+    icon: <User size={16} />,
+    navs: [
+      { name: "Info", to: "/profile" },
+      { name: "Edit", to: "/edit-profile" },
     ],
   },
 ];

@@ -40,6 +40,9 @@ const router = createBrowserRouter(
         <Route path="brand/edit/:id" element={<EditBrand />} />
 
         <Route path="transaksi" element={<TransaksiInfo />} />
+
+        <Route path="profile" element={<ProfileInfo />} />
+        <Route path="edit-profile" element={<EditProfil />} />
       </Route>
     </>
   )
