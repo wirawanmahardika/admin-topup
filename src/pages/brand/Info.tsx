@@ -5,7 +5,8 @@ import { useBrandFilters } from "../../hooks/brand/Info/useBrandFilters";
 import { BrandFilters } from "../../components/brand/info/BrandFilters";
 import { BrandTable } from "../../components/brand/info/BrandTable";
 import { ConfirmModal } from "../../components/brand/info/ConfirmModal";
-
+import { Pagination } from "../../components/Pagination";
+import { useEffect, useState } from "react";
 
 export default function BrandInfo() {
     const {
@@ -23,6 +24,21 @@ export default function BrandInfo() {
         filteredBrands,
         updateFilter
     } = useBrandFilters(brands);
+
+    // === Pagination logic ===
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 1;
+
+    const totalPages = Math.ceil(filteredBrands.length / itemsPerPage);
+    const paginatedBrands = filteredBrands.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    // Reset ke halaman 1 kalau filter berubah
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filters]);
 
     return (
         <div className="bg-base-100 rounded-lg shadow p-6">
@@ -43,15 +59,24 @@ export default function BrandInfo() {
                 sort={filters.sort}
                 onSearchChange={(val) => updateFilter("search", val)}
                 onOperatorChange={(val) => updateFilter("operator", val)}
-                onSortChange={(val) => updateFilter("sort", val as "created_desc" | "created_asc" | "popularity_desc" | "popularity_asc" | "name_asc" | "name_desc")}
+                onSortChange={(val) => updateFilter("sort", val as any)}
             />
 
             {/* Table UI */}
             <BrandTable
-                brands={filteredBrands}
+                brands={paginatedBrands} // gunakan yang sudah dipotong
                 isLoading={isLoading}
                 onDeleteBrand={openModal}
             />
+
+            {/* Pagination */}
+            <div className="mt-4 flex justify-center">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                />
+            </div>
 
             {/* Modal Konfirmasi */}
             <ConfirmModal
