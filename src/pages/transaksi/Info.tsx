@@ -1,6 +1,7 @@
 import { ToastContainer } from "react-toastify";
-import { useTransactionFilters } from "../../hooks/transaksi/Info/useTransactionFilter";
+import { Pagination } from "../../components/Pagination"; // Import komponen pagination
 import { useTransactions } from "../../hooks/transaksi/Info/useTransaction";
+import { useTransactionFilters } from "../../hooks/transaksi/Info/useTransactionFilter";
 import { exportTransactionsToXLSX } from "../../utils/transaksi/Info/exportUtils";
 import { TransactionFilters } from "../../components/transaksi/Info/TransactionFilters";
 import { TransactionTable } from "../../components/transaksi/Info/TransactionTable";
@@ -16,10 +17,14 @@ export default function TransaksiInfo() {
     const { 
         filters, 
         filteredTransactions, 
-        updateFilter 
+        updateFilter,
+        currentPage,
+        setCurrentPage,
+        totalPages
     } = useTransactionFilters(transactions);
 
     const handleExportXLSX = () => {
+        // Export semua, bukan hanya halaman saat ini
         exportTransactionsToXLSX(filteredTransactions);
     };
 
@@ -48,6 +53,12 @@ export default function TransaksiInfo() {
                 isLoading={isLoading}
                 onUpdateTopupStatus={updateTopupStatus}
                 onDeleteTransaction={deleteTransaction}
+            />
+
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
             />
         </div>
     );

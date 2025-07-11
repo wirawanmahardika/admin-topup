@@ -1,4 +1,3 @@
-// hooks/useTransactionFilters.ts
 import { useMemo, useState } from "react";
 import type { transactionType } from "../../../types/transactionType";
 
@@ -17,8 +16,11 @@ export const useTransactionFilters = (transactions: transactionType[]) => {
         paymentStatusFilter: ""
     });
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10; // Atur sesuai kebutuhan
+
     const filteredTransactions = useMemo(() => {
-        return transactions.filter(trx => {
+        const filtered = transactions.filter(trx => {
             const matchesSearch = 
                 trx.customer_number.toLowerCase().includes(filters.search.toLowerCase()) ||
                 trx.id.toLowerCase().includes(filters.search.toLowerCase()) ||
@@ -32,15 +34,28 @@ export const useTransactionFilters = (transactions: transactionType[]) => {
 
             return matchesSearch && matchesStatus && matchesOperator && matchesPaymentStatus;
         });
+
+        return filtered;
     }, [transactions, filters]);
 
+    // Pagination logic
+    const paginatedTransactions = useMemo(() => {
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        return filteredTransactions.slice(start, end);
+    }, [filteredTransactions, currentPage, itemsPerPage]);
+
     const updateFilter = <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
+        setCurrentPage(1); // reset ke halaman pertama setiap kali filter berubah
         setFilters(prev => ({ ...prev, [key]: value }));
     };
 
     return {
         filters,
-        filteredTransactions,
-        updateFilter
+        filteredTransactions: paginatedTransactions,
+        updateFilter,
+        currentPage,
+        setCurrentPage,
+        totalPages: Math.ceil(filteredTransactions.length / itemsPerPage)
     };
 };
