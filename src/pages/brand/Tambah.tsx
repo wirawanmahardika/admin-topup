@@ -4,22 +4,20 @@ import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../util
 import { ToastContainer } from "react-toastify";
 import { AxiosAuth } from "../../utils/axios";
 
-// Untuk produk manual
 type ManualProduct = {
     product_name: string;
     resell_price: number;
-    price: number; // Untuk manual, bisa diisi 0 atau sama dengan resell_price jika ingin
+    price: number;
     unlimited_stock: boolean;
-    digiflazz_product: boolean; // selalu false untuk manual
+    digiflazz_product: boolean;
 };
 
-// Untuk produk third party
 type ThirdPartyProduct = {
     product_name: string;
     resell_price: number;
-    price: number; // harga asli dari third party
+    price: number;
     unlimited_stock: boolean;
-    digiflazz_product: boolean; // selalu true untuk third party
+    digiflazz_product: boolean;
 };
 
 function ThirdPartyProductList({

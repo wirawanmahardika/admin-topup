@@ -27,7 +27,7 @@ export default function BrandInfo() {
 
     // === Pagination logic ===
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 1;
+    const itemsPerPage = 10;
 
     const totalPages = Math.ceil(filteredBrands.length / itemsPerPage);
     const paginatedBrands = filteredBrands.slice(

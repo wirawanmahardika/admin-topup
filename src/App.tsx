@@ -19,6 +19,9 @@ import EditBrand from "./pages/brand/Edit";
 import ProfileInfo from "./pages/profile/Info";
 import EditProfil from "./pages/profile/Edit";
 import TambahSaldo from "./pages/profile/TambahSaldo";
+import PaymentInfo from "./pages/payment/Info";
+import EditPayment from "./pages/payment/Edit";
+import TambahPayment from "./pages/payment/Tambah";
 
 const router = createBrowserRouter(
 // const router = createHashRouter(
@@ -27,6 +30,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
+        <Route path="transaksi" element={<TransaksiInfo />} />
 
         <Route path="profile" element={<ProfileInfo />} />
         <Route path="profile/edit" element={<EditProfil />} />
@@ -40,7 +44,10 @@ const router = createBrowserRouter(
         <Route path="brand/edit/:id" element={<EditBrand />} />
         <Route path="brand/:id/product/tambah" element={<TambahProduct />} />
 
-        <Route path="transaksi" element={<TransaksiInfo />} />
+
+        <Route path="payment" element={<PaymentInfo />} />
+        <Route path="payment/tambah" element={<TambahPayment />} />
+        <Route path="payment/:id/edit" element={<EditPayment />} />
 
         <Route path="profile" element={<ProfileInfo />} />
         <Route path="edit-profile" element={<EditProfil />} />

@@ -13,6 +13,7 @@ export default [
     icon: <FileText size={16} />,
     navs: [
       { name: "Transaksi", to: "/transaksi" },
+      { name: "Pembayaran", to: "/payment" },
     ],
   },
   {
