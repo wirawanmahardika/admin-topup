@@ -39,6 +39,9 @@ export default function Dashboard() {
         })
     }, [])
 
+    console.log(recentTransactions);
+    
+
     const fullMonthData = getFullMonthData(transactionPermonth);
     const barData = {
         labels: fullMonthData.map(s => ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"][s.bulan - 1]),

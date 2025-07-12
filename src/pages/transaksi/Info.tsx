@@ -24,8 +24,7 @@ export default function TransaksiInfo() {
     } = useTransactionFilters(transactions);
 
     const handleExportXLSX = () => {
-        // Export semua, bukan hanya halaman saat ini
-        exportTransactionsToXLSX(filteredTransactions);
+        exportTransactionsToXLSX(transactions);
     };
 
     return (

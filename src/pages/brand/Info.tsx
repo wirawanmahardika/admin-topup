@@ -35,7 +35,6 @@ export default function BrandInfo() {
         currentPage * itemsPerPage
     );
 
-    // Reset ke halaman 1 kalau filter berubah
     useEffect(() => {
         setCurrentPage(1);
     }, [filters]);
@@ -64,7 +63,7 @@ export default function BrandInfo() {
 
             {/* Table UI */}
             <BrandTable
-                brands={paginatedBrands} // gunakan yang sudah dipotong
+                brands={paginatedBrands}
                 isLoading={isLoading}
                 onDeleteBrand={openModal}
             />

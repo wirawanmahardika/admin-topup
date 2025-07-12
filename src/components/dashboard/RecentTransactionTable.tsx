@@ -1,8 +1,12 @@
+import { NavLink } from "react-router-dom"
 import type { transactionType } from "../../types/transactionType"
 
-export default function RecentTransactionTable({transactionData}:{transactionData: transactionType[]}) {
-    return <div className="mt-10">
-        <h3 className="font-bold mb-3">Transaksi Terbaru</h3>
+export default function RecentTransactionTable({ transactionData }: { transactionData: transactionType[] }) {
+    return <div className="mt-10 bg-base-200 p-5 rounded">
+        <div className="flex justify-between">
+            <h3 className="font-bold mb-3">Transaksi Terbaru</h3>
+            <NavLink to={"/transaksi"} className="btn btn-info">Detail</NavLink>
+        </div>
         <div className="overflow-x-auto">
             <table className="table table-zebra w-full">
                 <thead>
@@ -25,9 +29,9 @@ export default function RecentTransactionTable({transactionData}:{transactionDat
                                 <td>{trx.brand?.name}</td>
                                 <td>Rp {(trx.product?.resell_price)?.toLocaleString()}</td>
                                 <td>
-                                    {trx.topup_status === "sukses" && <span className="badge badge-success">Berhasil</span>}
-                                    {trx.topup_status === "pending" && <span className="badge badge-warning">Pending</span>}
-                                    {trx.topup_status === "gagal" && <span className="badge badge-error">Gagal</span>}
+                                    {trx.topup_status === "Sukses" && <span className="badge badge-success">Berhasil</span>}
+                                    {trx.topup_status === "Pending" && <span className="badge badge-warning">Pending</span>}
+                                    {trx.topup_status === "Gagal" && <span className="badge badge-error">Gagal</span>}
                                 </td>
                             </tr>
                         )
