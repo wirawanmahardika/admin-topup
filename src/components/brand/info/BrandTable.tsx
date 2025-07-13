@@ -25,7 +25,6 @@ export const BrandTable = ({ brands, isLoading, onDeleteBrand }: BrandTableProps
                         <th>Popularitas</th>
                         <th>Operator</th>
                         <th>Dibuat</th>
-                        <th>Diupdate</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -49,9 +48,9 @@ export const BrandTable = ({ brands, isLoading, onDeleteBrand }: BrandTableProps
                                     </span>
                                 </td>
                                 <td>{new Date(brand.created_at).toLocaleString()}</td>
-                                <td>{new Date(brand.updated_at).toLocaleString()}</td>
                                 <td>
                                     <NavLink to={`/brand/edit/${brand.id}`} className="btn btn-xs btn-outline mr-2">Edit</NavLink>
+                                    <NavLink to={`/brand/detail/${brand.id}`} className="btn btn-xs btn-accent mr-2">Detail</NavLink>
                                     <NavLink to={`/brand/${brand.id}/products`} className="btn btn-xs btn-info mr-2">Lihat Produk</NavLink>
                                     <button className="btn btn-xs btn-error" onClick={() => onDeleteBrand(brand)}>Hapus</button>
                                 </td>

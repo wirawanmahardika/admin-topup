@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import { AxiosAuth } from "../../utils/axios";
 import { errorToast } from "../../utils/toast";
 
@@ -30,7 +29,7 @@ export default function EditBrand() {
         if (image) formData.append("image", image);
 
         try {
-            await axios.put(`http://localhost:3000/brand/${id}`, formData, {
+            await AxiosAuth.put(`/brand/${id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
             navigate("/brands");

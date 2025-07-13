@@ -8,7 +8,18 @@ export type brandType = {
     popularity: number;
     created_at: string;
     updated_at: string;
-    products?: productType 
+    products?: productType[]
+    input_fields: {
+        id: string;
+        id_brand: string;
+        input_key: string;
+        label: string;
+        placeholder: string;
+        order_index: number;
+
+        created_at: string;
+        updated_at: string;
+    }[]
 }
 
 export type brandReducerActionType = {
