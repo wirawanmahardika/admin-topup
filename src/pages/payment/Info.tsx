@@ -1,18 +1,31 @@
-import { useEffect, useState } from "react";
-import type { PaymentType } from "../../types/paymentType";
+import { useEffect, useReducer } from "react";
 import { AxiosAuth } from "../../utils/axios";
 import { NavLink } from "react-router-dom";
+import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
+import { ToastContainer } from "react-toastify";
+import { paymentInfoReducer } from "../../hooks/payment/Info/reducer";
 
 export default function PaymentInfo() {
-    const [payments, setPayments] = useState<PaymentType[]>([])
+    const [payments, dispatch] = useReducer(paymentInfoReducer, [])
 
     useEffect(() => {
-        AxiosAuth.get("/payments")
-            .then(res => { setPayments(res.data.data) })
+        AxiosAuth.get("/payments").then(res => { dispatch({ type: "get-all", payload: res.data.data }) })
     }, [])
+
+    const handleHapusPayment = async (id: string) => {
+        const idToast = loadingToast()
+        try {
+            const res = await AxiosAuth.delete("/payment/" + id)
+            dispatch({ type: "delete", payload: id })
+            loadingSuccessToast(idToast, res.data.message)
+        } catch (error: any) {
+            loadingErrorToast(idToast, error.response?.data.message ?? "Terjadi kesalahan")
+        }
+    }
 
     return (
         <div className="bg-base-100 rounded-lg shadow p-6 mx-auto w-full">
+            <ToastContainer />
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold mb-6">Daftar Metode Pembayaran</h2>
                 <NavLink to={"/payment/tambah"} className="btn btn-primary">Tambah Payment</NavLink>
@@ -55,8 +68,8 @@ export default function PaymentInfo() {
                                 </td>
                                 <td>
                                     <div className="flex gap-x-2 items-center">
-                                    <NavLink to={`/payment/${p.id}/edit`} className="btn btn-accent btn-sm">Edit</NavLink>
-                                    <button className="btn btn-error btn-sm">Hapus</button>
+                                        <NavLink to={`/payment/${p.id}/edit`} className="btn btn-accent btn-sm">Edit</NavLink>
+                                        <button onClick={() => handleHapusPayment(p.id)} className="btn btn-error btn-sm">Hapus</button>
                                     </div>
                                 </td>
                             </tr>

@@ -9,3 +9,8 @@ export type PaymentType = {
     created_at: string;
     updated_at: string;
 };
+
+export type paymentReducerActionType = {
+    type: "get-all" | "delete",
+    payload: PaymentType[] | string
+}
