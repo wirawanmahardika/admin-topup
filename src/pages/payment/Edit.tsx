@@ -1,51 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { AxiosAuth } from "../../utils/axios";
+import type { PaymentType } from "../../types/paymentType";
+import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
+import { ToastContainer } from "react-toastify";
 
-// Dummy data, ganti dengan fetch data asli jika sudah ada backend
-const dummyPayment = {
-    type: "Bank Transfer",
-    channel: "BCA",
-    name: "BCA Virtual Account",
-    active: true,
-    image: "https://upload.wikimedia.org/wikipedia/commons/6/6b/BCA_logo.png",
-    description: "Transfer melalui Virtual Account BCA",
-};
-
-const paymentTypes = ["QRIS", "Bank Transfer", "OTC"];
-const channelOptions: Record<string, string[]> = {
-    QRIS: ["QRIS"],
-    "Bank Transfer": ["BCA", "BNI", "BRI", "MANDIRI"],
-    OTC: ["ALFAMART", "INDOMARET"],
-};
+const paymentTypes = ["bank_transfer", "cstore", "qris"]
 
 export default function EditPayment() {
     const { id } = useParams();
-    const [type, setType] = useState(dummyPayment.type);
-    const [channel, setChannel] = useState(dummyPayment.channel);
-    const [name, setName] = useState(dummyPayment.name);
-    const [active, setActive] = useState(dummyPayment.active);
-    const [image, setImage] = useState(dummyPayment.image);
-    const [description, setDescription] = useState(dummyPayment.description);
+    const [payment, setPayment] = useState<PaymentType>()
+    const [paymentIsActive, setPaymentIsActive] = useState(false)
 
-    const handleSubmit = (e: React.FormEvent) => {
+    useEffect(() => {
+        AxiosAuth.get("/payment/" + id)
+            .then(res => {
+                setPayment(res.data.data)
+                setPaymentIsActive(res.data.data.active)
+            })
+    }, [])
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Update data payment di sini
-        alert("Payment berhasil diupdate!");
+        if (!id) return
+        const formData = new FormData(e.currentTarget)
+        formData.append("active", String(paymentIsActive))
+
+        const idToast = loadingToast()
+        try {
+            const res = await AxiosAuth.put("/payment/" + id, formData)
+            loadingSuccessToast(idToast, res.data.message)
+        } catch (error: any) {
+            loadingErrorToast(idToast, error.response?.data.message ?? "Terjadi kesalahan")
+        }
     };
 
     return (
         <div className="bg-base-100 rounded-lg shadow p-6 max-w-lg mx-auto">
+            <ToastContainer />
             <h2 className="text-xl font-bold mb-4">Edit Metode Pembayaran</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block mb-1 font-medium">Tipe</label>
                     <select
                         className="select select-bordered w-full"
-                        value={type}
-                        onChange={e => {
-                            setType(e.target.value);
-                            setChannel(channelOptions[e.target.value][0]);
-                        }}
+                        name="type"
+                        defaultValue={payment?.type}
                     >
                         {paymentTypes.map(t => (
                             <option key={t} value={t}>{t}</option>
@@ -54,42 +54,40 @@ export default function EditPayment() {
                 </div>
                 <div>
                     <label className="block mb-1 font-medium">Channel</label>
-                    <select
-                        className="select select-bordered w-full"
-                        value={channel}
-                        onChange={e => setChannel(e.target.value)}
-                    >
-                        {channelOptions[type].map(c => (
-                            <option key={c} value={c}>{c}</option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <label className="block mb-1 font-medium">Nama</label>
                     <input
                         type="text"
                         className="input input-bordered w-full"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
+                        name="channel_code"
+                        defaultValue={payment?.channel_code}
+                        placeholder="Masukkan tipe channel.. (BNI, Gopay, QRIS)"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block mb-1 font-medium">Logo (URL)</label>
+                    <label className="block mb-1 font-medium">Nama di Tampilan Pengguna</label>
                     <input
-                        type="url"
+                        type="text"
+                        name="name"
                         className="input input-bordered w-full"
-                        value={image}
-                        onChange={e => setImage(e.target.value)}
+                        defaultValue={payment?.name}
                         required
+                    />
+                </div>
+                <div>
+                    <label className="block mb-1 font-medium">Logo</label>
+                    <input
+                        type="file"
+                        className="file-input w-full"
+                        name="image"
+                        placeholder="logo"
                     />
                 </div>
                 <div>
                     <label className="block mb-1 font-medium">Deskripsi</label>
                     <textarea
                         className="textarea textarea-bordered w-full"
-                        value={description}
-                        onChange={e => setDescription(e.target.value)}
+                        name="description"
+                        defaultValue={payment?.description}
                         rows={2}
                     />
                 </div>
@@ -97,8 +95,8 @@ export default function EditPayment() {
                     <input
                         type="checkbox"
                         className="checkbox"
-                        checked={active}
-                        onChange={e => setActive(e.target.checked)}
+                        checked={paymentIsActive}
+                        onChange={e => setPaymentIsActive(e.target.checked)}
                         id="active"
                     />
                     <label htmlFor="active" className="cursor-pointer">Aktif</label>

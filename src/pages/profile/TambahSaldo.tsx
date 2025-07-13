@@ -20,11 +20,8 @@ export default function TambahSaldo() {
             loadingSuccessToast(idToast, res.data.message);
             setAmountDeposit(res.data.data.amount)
             setUniqueCode(res.data.data.notes)
-            console.log(res.data.data,  { amount: Number(amount), Bank: bank });
-            
             setStep(2);
         } catch (error: any) {
-            console.log(error);
             loadingErrorToast(idToast, error.response?.data.message ?? "Terjadi kesalahan");
         }
     };

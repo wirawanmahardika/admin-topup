@@ -2,6 +2,8 @@ import { ToastContainer } from "react-toastify";
 import { AxiosAuth } from "../../utils/axios";
 import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 
+const paymentTypes = ["bank_transfer", "cstore", "qris"]
+
 export default function TambahPayment() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -11,9 +13,7 @@ export default function TambahPayment() {
         try {
             const res = await AxiosAuth.post('/payment', formData)
             loadingSuccessToast(idToast, res.data.message)
-            console.log(res.data);
         } catch (error: any) {
-            console.log(error);
             loadingErrorToast(idToast, error.response?.data.message ?? "Terjadi kesalahan")
         }
     };
@@ -25,13 +25,13 @@ export default function TambahPayment() {
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block mb-1 font-medium">Tipe</label>
-                    <input
-                        type="text"
-                        className="input input-bordered w-full"
+                    <select 
                         name="type"
-                        placeholder="Masukkan tipe pembayaran.. (bank transfer, qris)"
+                        className="select w-full"
                         required
-                    />
+                    >
+                        {paymentTypes.map((p, i) => <option key={i} value={p}>{p.replace("_", " ")}</option>)}
+                    </select>
                 </div>
                 <div>
                     <label className="block mb-1 font-medium">Channel</label>

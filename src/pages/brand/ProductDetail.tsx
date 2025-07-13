@@ -13,8 +13,6 @@ export default function BrandProductDetail() {
     const [products, setProducts] = useState<productType[]>([]);
     const [brand, setBrand] = useState<brandType | null>(null)
     const [loading, setLoading] = useState(false);
-    console.log(brand);
-
 
     // Filter states
     const [search, setSearch] = useState("");
