@@ -64,6 +64,12 @@ export const ProductTable = ({ products, isLoading, onDeleteProduct }: ProductTa
                                         >
                                             Edit
                                         </NavLink>
+                                        <NavLink 
+                                            to={`/product/${product.id}/detail`} 
+                                            className="btn btn-xs btn-info"
+                                        >
+                                            Detail
+                                        </NavLink>
                                         <button
                                             className="btn btn-xs btn-error"
                                             onClick={() => onDeleteProduct(product)}

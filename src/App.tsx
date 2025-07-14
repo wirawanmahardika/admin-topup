@@ -24,6 +24,7 @@ import EditPayment from "./pages/payment/Edit";
 import TambahPayment from "./pages/payment/Tambah";
 import DetailBrand from "./pages/brand/Detail";
 import EditInputFieldBrand from "./pages/brand/EditInputFields";
+import ProductDetail from "./pages/product/Detail";
 
 const router = createBrowserRouter(
 // const router = createHashRouter(
@@ -37,6 +38,7 @@ const router = createBrowserRouter(
         <Route path="profile" element={<ProfileInfo />} />
         <Route path="profile/edit" element={<EditProfil />} />
 
+        <Route path="product/:id/detail" element={<ProductDetail />} />
         <Route path="products" element={<ProductInfo />} />
         <Route path="product/edit/:id" element={<EditProduct />} />
 
@@ -47,7 +49,6 @@ const router = createBrowserRouter(
         <Route path="brand/edit/:id" element={<EditBrand />} />
         <Route path="brand/:id/product/tambah" element={<TambahProduct />} />
         <Route path="brand/:id/input-field/edit" element={<EditInputFieldBrand />} />
-
 
         <Route path="payment" element={<PaymentInfo />} />
         <Route path="payment/tambah" element={<TambahPayment />} />
