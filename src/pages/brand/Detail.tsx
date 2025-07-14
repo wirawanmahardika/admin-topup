@@ -62,12 +62,12 @@ export default function DetailBrand() {
   }
 
   return (
-    <div className="bg-base-100 rounded-lg shadow p-6 w-full lg:w-2/3 ">
+    <div className="bg-base-300 rounded-lg shadow p-6 w-full lg:w-2/3">
       <ToastContainer />
       <h2 className="text-2xl font-bold mb-6">Detail Brand</h2>
       <div className="flex flex-col gap-6">
         {/* Informasi Brand */}
-        <div className="space-y-4">
+        <div className="grid justify-items-center grid-cols-2 gap-8">
           <div>
             <label className="block mb-1 font-semibold text-base-content">Logo Brand</label>
             <div className="w-32 h-32 rounded overflow-hidden">

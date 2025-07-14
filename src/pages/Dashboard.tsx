@@ -17,6 +17,7 @@ import { doughnutColors, getFullMonthData } from "../utils/dashboard";
 import SummaryCard from "../components/dashboard/SummaryCard";
 import ChartCard from "../components/dashboard/ChartCard";
 import RecentTransactionTable from "../components/dashboard/RecentTransactionTable";
+import dayjs from "dayjs";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 export default function Dashboard() {
@@ -69,7 +70,7 @@ export default function Dashboard() {
         responsive: true,
         plugins: {
             legend: { display: false },
-            title: { display: true, text: "Grafik Penjualan Per Bulan" },
+            title: { display: true, text: "Grafik Penjualan Per Bulan Tahun " + dayjs().year() },
         },
         scales: {
             y: { beginAtZero: true, ticks: { stepSize: 20 } },
