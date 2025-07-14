@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { AxiosAuth } from "../../utils/axios";
 import { errorToast } from "../../utils/toast";
 import { ToastContainer } from "react-toastify";
@@ -41,6 +41,7 @@ const useBrandDetail = () => {
 };
 
 export default function DetailBrand() {
+  const { id } = useParams<{ id: string }>();
   const { brand, loading } = useBrandDetail();
   const navigate = useNavigate()
 
@@ -92,8 +93,10 @@ export default function DetailBrand() {
         </div>
         {/* Data Customer (input_fields) */}
         <div className="w-full">
-          <h3 className="text-xl font-semibold mb-4">Input Fields</h3>
-
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-semibold">Input Fields</h3>
+            <NavLink to={`/brand/${id}/input-field/edit`} className="btn btn-primary btn-sm">Edit</NavLink>
+          </div>
 
           <div className="overflow-x-auto mt-3">
             <table className="table table-zebra">
@@ -119,7 +122,7 @@ export default function DetailBrand() {
               </tbody>
             </table>
           </div>
-          
+
         </div>
       </div>
       <div className="flex justify-start mt-6">
