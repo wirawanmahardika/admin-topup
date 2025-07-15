@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react';
 import {
-    ShoppingCart,
-    Store,
     Package,
     Clock,
-    AlertCircle,
     CheckCircle,
     XCircle,
     Tag,
-    Info,
     Zap,
     Building
 } from 'lucide-react';
@@ -52,7 +48,6 @@ const sampleProduct: productType = {
 
 const ProductDetail = () => {
     const { id } = useParams()
-    const [quantity, setQuantity] = useState(1);
     const [product, setProduct] = useState<productType>(sampleProduct)
 
     useEffect(() => {
@@ -85,10 +80,10 @@ const ProductDetail = () => {
     const getStatusBadge = (status: boolean, label: string) => {
         return (
             <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${status
-                ? 'bg-success bg-opacity-20 text-success'
-                : 'bg-error bg-opacity-20 text-error'
+                ? 'bg-success bg-opacity-20 text-success-content'
+                : 'bg-error bg-opacity-20 text-error-content'
                 }`}>
-                {false ? <CheckCircle size={16} /> : <XCircle size={16} />}
+                {status ? <CheckCircle size={16} /> : <XCircle size={16} />}
                 {label}
             </div>
         );
@@ -142,9 +137,9 @@ const ProductDetail = () => {
                 </div>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-6">
+            <div className="flex">
                 {/* Left Column - Product Info */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="w-full space-y-4">
                     {/* Price & Stock Card */}
                     <div className="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6">
                         <div className="grid md:grid-cols-2 gap-6">
@@ -250,89 +245,6 @@ const ProductDetail = () => {
                                 <div className="flex justify-between">
                                     <span className="text-base-content opacity-70">Updated:</span>
                                     <span className="text-sm text-base-content">{formatDate(product.updated_at)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Right Column - Action Card */}
-                <div className="lg:col-span-1">
-                    <div className="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6 sticky top-6">
-                        <h3 className="text-lg font-semibold text-base-content mb-6">Quick Purchase</h3>
-
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-base-content mb-2">Quantity</label>
-                                <div className="flex items-center gap-3">
-                                    <button
-                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                        className="btn btn-outline btn-sm w-10 h-10 min-h-10 p-0 flex items-center justify-center"
-                                    >
-                                        -
-                                    </button>
-                                    <input
-                                        type="number"
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                                        className="input input-bordered flex-1 text-center"
-                                        min="1"
-                                    />
-                                    <button
-                                        onClick={() => setQuantity(quantity + 1)}
-                                        className="btn btn-outline btn-sm w-10 h-10 min-h-10 p-0 flex items-center justify-center"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="bg-base-200 rounded-lg p-4">
-                                <div className="flex justify-between items-center mb-2">
-                                    <span className="text-base-content opacity-70">Total Modal:</span>
-                                    <span className="font-semibold text-base-content">{formatCurrency(product.price * quantity)}</span>
-                                </div>
-                                <div className="flex justify-between items-center mb-2">
-                                    <span className="text-base-content opacity-70">Total Jual:</span>
-                                    <span className="font-semibold text-success">{formatCurrency(product.resell_price * quantity)}</span>
-                                </div>
-                                <div className="flex justify-between items-center pt-2 border-t border-base-300">
-                                    <span className="text-base-content opacity-70">Total Profit:</span>
-                                    <span className="font-semibold text-success">{formatCurrency(profit * quantity)}</span>
-                                </div>
-                            </div>
-
-                            <button
-                                className="btn btn-primary w-full"
-                                disabled={!product.buyer_product_status || !product.seller_product_status}
-                            >
-                                <ShoppingCart size={20} />
-                                Add to Cart
-                            </button>
-
-                            {(!product.buyer_product_status || !product.seller_product_status) && (
-                                <div className="alert alert-error">
-                                    <AlertCircle size={16} />
-                                    <span>Product currently unavailable</span>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Quick Info */}
-                        <div className="mt-6 pt-6 border-t border-base-300">
-                            <h4 className="font-medium text-base-content mb-3">Quick Info</h4>
-                            <div className="space-y-2 text-sm">
-                                <div className="flex items-center gap-2 text-base-content opacity-70">
-                                    <Info size={14} />
-                                    <span>Instant processing</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-base-content opacity-70">
-                                    <CheckCircle size={14} />
-                                    <span>Automated system</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-base-content opacity-70">
-                                    <Store size={14} />
-                                    <span>Trusted seller</span>
                                 </div>
                             </div>
                         </div>

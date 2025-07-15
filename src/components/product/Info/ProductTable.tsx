@@ -58,18 +58,19 @@ export const ProductTable = ({ products, isLoading, onDeleteProduct }: ProductTa
                                 </td>
                                 <td>
                                     <div className="flex gap-2">
-                                        <NavLink 
-                                            to={`/product/edit/${product.id}`} 
+                                        <NavLink
+                                            to={`/product/edit/${product.id}`}
                                             className="btn btn-xs btn-outline"
                                         >
                                             Edit
                                         </NavLink>
-                                        <NavLink 
-                                            to={`/product/${product.id}/detail`} 
-                                            className="btn btn-xs btn-info"
-                                        >
-                                            Detail
-                                        </NavLink>
+                                        <button className="btn btn-xs btn-info" disabled={product.brand_info?.operator === "manual"}>
+                                            <NavLink
+                                                to={`/product/${product.id}/detail`}
+                                            >
+                                                Detail
+                                            </NavLink>
+                                        </button>
                                         <button
                                             className="btn btn-xs btn-error"
                                             onClick={() => onDeleteProduct(product)}

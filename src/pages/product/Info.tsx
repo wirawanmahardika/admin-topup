@@ -1,5 +1,3 @@
-// Main Component - ProductInfo.tsx
-import { NavLink } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import type { productType } from "../../types/productType";
 import { useProducts } from "../../hooks/product/Info/useProducts";
@@ -43,12 +41,6 @@ export default function ProductInfo() {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-4">
                 <h2 className="text-xl font-bold">Daftar Produk Topup Game</h2>
-                <NavLink
-                    to="/product/tambah"
-                    className="btn btn-primary"
-                >
-                    Tambah Produk
-                </NavLink>
             </div>
 
             {/* Filters */}
