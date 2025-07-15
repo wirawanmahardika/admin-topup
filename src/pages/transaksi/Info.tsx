@@ -27,6 +27,9 @@ export default function TransaksiInfo() {
         exportTransactionsToXLSX(transactions);
     };
 
+    console.log(transactions);
+    
+
     return (
         <div className="bg-base-100 rounded-lg shadow p-6">
             <ToastContainer />

@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import type { transactionType } from "../../../types/transactionType";
 import { TopupStatusSelect } from "./TopupStatusSelect";
 import { PaymentStatusBadge } from "./PaymentStatusBadge";
+import { NavLink } from "react-router-dom";
 
 interface TransactionTableProps {
     transactions: transactionType[];
@@ -82,7 +83,11 @@ export const TransactionTable = ({
                                         disabled={trx.brand?.operator === "sistem"}
                                     />
                                 </td>
-                                <td>
+                                <td className="space-x-3">
+                                    <NavLink to={`/transaksi/${trx.id}/detail`}
+                                        className="btn btn-info btn-sm"                                    >
+                                        Detail
+                                    </NavLink>
                                     <button 
                                         onClick={() => onDeleteTransaction(trx.id)} 
                                         className="btn btn-error btn-sm"

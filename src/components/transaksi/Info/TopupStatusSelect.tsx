@@ -7,11 +7,7 @@ interface TopupStatusSelectProps {
 }
 
 export const TopupStatusSelect = ({ value, onChange, disabled }: TopupStatusSelectProps) => {
-    console.log(value);
-    
     const getSelectClass = () => {
-        console.log(value);
-        
         switch (value) {
             case "Sukses": return "select select-xs select-success";
             case "Pending": return "select select-xs select-warning";
