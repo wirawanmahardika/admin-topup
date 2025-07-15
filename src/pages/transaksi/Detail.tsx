@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Package, CreditCard, Clock, CheckCircle, XCircle, AlertCircle, Copy, Calendar, DollarSign, Tag, Building2, Phone, Code, FileText } from 'lucide-react';
+import {
+    ArrowLeft, Package, CreditCard, Clock,
+    CheckCircle, XCircle, AlertCircle,
+    Copy, Calendar, DollarSign, Tag,
+    Building2, Phone, Code
+} from 'lucide-react';
 import { AxiosAuth } from '../../utils/axios';
 import { useParams } from 'react-router-dom';
+import { loadingErrorToast, loadingSuccessToast, loadingToast } from '../../utils/toast';
+import { ToastContainer } from 'react-toastify';
 
 // Sample transaction data
 const transactionDataDefault = {
@@ -48,7 +55,6 @@ const transactionDataDefault = {
     }
 };
 
-
 const TransactionDetailPage = () => {
     const { id } = useParams()
     const [copied, setCopied] = useState(false);
@@ -77,34 +83,57 @@ const TransactionDetailPage = () => {
     };
 
     const getStatusBadge = (status: string) => {
-        switch (status) {
-            case 'paid':
+        switch (status.toLowerCase()) {
+            case 'capture':
+            case 'sukses':
             case 'success':
+            case 'settlement':
                 return 'badge-success';
             case 'pending':
+            case 'Pending':
                 return 'badge-warning';
-            case 'failed':
-            case 'cancelled':
-                return 'badge-error';
             default:
-                return 'badge-neutral';
+                return 'badge-error';
         }
     };
 
     const getStatusIcon = (status: string) => {
-        switch (status) {
+        switch (status.toLowerCase()) {
             case 'paid':
             case 'success':
+            case 'sukses':
+            case 'settlement':
                 return <CheckCircle className="w-4 h-4" />;
             case 'pending':
                 return <AlertCircle className="w-4 h-4" />;
             case 'failed':
+            case 'gagal':
             case 'cancelled':
                 return <XCircle className="w-4 h-4" />;
             default:
                 return <Clock className="w-4 h-4" />;
         }
     };
+
+    const handleRefreshStatus = async (type: "topup" | "payment") => {
+        const idToast = loadingToast()
+        try {
+            const res = await AxiosAuth.get(`/transaction/${id}/${type}-status`)
+            switch (type) {
+                case "topup":
+                    console.log(res.data.data);
+                    setTransactionData(prev => ({ ...prev, topup_status: res.data.data.status }))
+                    break;
+                case "payment":
+                    console.log(res.data);
+                    setTransactionData(prev => ({ ...prev, payment_status: res.data.data.status }))
+                    break
+            }
+            loadingSuccessToast(idToast, res.data.message)
+        } catch (error: any) {
+            loadingErrorToast(idToast, error.response?.data.message ?? "Terjadi kesalahan")
+        }
+    }
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
@@ -114,6 +143,7 @@ const TransactionDetailPage = () => {
 
     return (
         <div className="bg-base-100">
+            <ToastContainer />
             {/* Header */}
             <div className="navbar bg-base-200 shadow-lg">
                 <div className="navbar-start">
@@ -324,9 +354,12 @@ const TransactionDetailPage = () => {
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm text-base-content/70">Status Pembayaran</span>
-                                        <div className={`badge ${getStatusBadge(transactionData.payment_status)} gap-1`}>
-                                            {getStatusIcon(transactionData.payment_status)}
-                                            <span className="capitalize">{transactionData.payment_status}</span>
+                                        <div className="flex flex-col gap-y-3">
+                                            <div className={`badge ${getStatusBadge(transactionData.payment_status)} gap-1`}>
+                                                {getStatusIcon(transactionData.payment_status)}
+                                                <span className="capitalize">{transactionData.payment_status}</span>
+                                            </div>
+                                            <button onClick={() => handleRefreshStatus("payment")} className='btn btn-primary btn-xs'>Refresh</button>
                                         </div>
                                     </div>
 
@@ -334,9 +367,12 @@ const TransactionDetailPage = () => {
 
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm text-base-content/70">Status Topup</span>
-                                        <div className={`badge ${getStatusBadge(transactionData.topup_status)} gap-1`}>
-                                            {getStatusIcon(transactionData.topup_status)}
-                                            <span className="capitalize">{transactionData.topup_status}</span>
+                                        <div className="flex flex-col gap-y-3">
+                                            <div className={`badge ${getStatusBadge(transactionData.topup_status)} gap-1`}>
+                                                {getStatusIcon(transactionData.topup_status)}
+                                                <span className="capitalize">{transactionData.topup_status}</span>
+                                            </div>
+                                            <button onClick={() => handleRefreshStatus("topup")} className='btn btn-primary btn-xs'>Refresh</button>
                                         </div>
                                     </div>
                                 </div>
@@ -370,7 +406,7 @@ const TransactionDetailPage = () => {
                         </div>
 
                         {/* Actions */}
-                        <div className="card bg-base-200 shadow-xl">
+                        {/* <div className="card bg-base-200 shadow-xl">
                             <div className="card-body">
                                 <h2 className="card-title mb-4">
                                     <FileText className="w-5 h-5" />
@@ -389,11 +425,11 @@ const TransactionDetailPage = () => {
                                     </button>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
