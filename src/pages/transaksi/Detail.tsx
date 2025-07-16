@@ -370,7 +370,13 @@ const TransactionDetailPage = () => {
                                                 {getStatusIcon(transactionData.topup_status)}
                                                 <span className="capitalize">{transactionData.topup_status}</span>
                                             </div>
-                                            <button onClick={() => handleRefreshStatus("topup")} className='btn btn-primary btn-xs'>Refresh</button>
+                                            <button disabled={
+                                                ["pending", "deny", "cancel", "expire", "failure", "refund", "partial_refund"]
+                                                    .some(v => v === transactionData.payment_status.toLowerCase())
+                                            }
+                                                onClick={() => handleRefreshStatus("topup")} className='btn btn-primary btn-xs'>
+                                                Refresh
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
