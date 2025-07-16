@@ -12,9 +12,6 @@ export default function PaymentInfo() {
         AxiosAuth.get("/payments").then(res => { dispatch({ type: "get-all", payload: res.data.data }) })
     }, [])
 
-    console.log(payments);
-
-
     const handleHapusPayment = async (id: string) => {
         const idToast = loadingToast()
         try {
@@ -70,7 +67,8 @@ export default function PaymentInfo() {
                                 <td><span className="text-sm">Rp {(p.midtrans_price).toLocaleString("id")}</span></td>
                                 <td><span className="text-sm">{p.description || "-"}</span></td>
                                 <td>
-                                    <div className="flex gap-x-2 items-center">
+                                    <div className="flex gap-x-2 items-center gap-2">
+                                        <NavLink to={`/payment/${p.id}/detail`} className="btn btn-info btn-sm">Detail</NavLink>
                                         <NavLink to={`/payment/${p.id}/edit`} className="btn btn-accent btn-sm">Edit</NavLink>
                                         <button onClick={() => handleHapusPayment(p.id)} className="btn btn-error btn-sm">Hapus</button>
                                     </div>

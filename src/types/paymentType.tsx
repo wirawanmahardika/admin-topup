@@ -1,3 +1,5 @@
+import type { paymentFeeType } from "./paymentFeeType";
+
 export type PaymentType = {
     id: string;
     type: string;
@@ -7,6 +9,7 @@ export type PaymentType = {
     image: string;
     midtrans_price: number;
     description?: string;
+    payment_fees?: paymentFeeType[]
     created_at: string;
     updated_at: string;
 };

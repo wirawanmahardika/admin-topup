@@ -2,7 +2,7 @@ import { ToastContainer } from "react-toastify";
 import { AxiosAuth } from "../../utils/axios";
 import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 
-const paymentTypes = ["bank_transfer", "cstore", "qris"]
+const paymentTypes = ["bank_transfer", "cstore", "qris", "echannel"]
 
 export default function TambahPayment() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

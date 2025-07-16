@@ -5,7 +5,7 @@ import type { PaymentType } from "../../types/paymentType";
 import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 import { ToastContainer } from "react-toastify";
 
-const paymentTypes = ["bank_transfer", "cstore", "qris"]
+const paymentTypes = ["bank_transfer", "cstore", "qris", "echannel"]
 
 export default function EditPayment() {
     const { id } = useParams();
