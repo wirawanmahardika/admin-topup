@@ -83,6 +83,15 @@ export default function EditPayment() {
                     />
                 </div>
                 <div>
+                    <label className="block mb-1 font-medium">Potongan Midtrans</label>
+                    <textarea
+                        className="textarea textarea-bordered w-full"
+                        name="midtrans_price"
+                        defaultValue={payment?.midtrans_price}
+                        rows={2}
+                    />
+                </div>
+                <div>
                     <label className="block mb-1 font-medium">Deskripsi</label>
                     <textarea
                         className="textarea textarea-bordered w-full"

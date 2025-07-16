@@ -5,6 +5,7 @@ export type PaymentType = {
     name: string;
     active: boolean;
     image: string;
+    midtrans_price: number;
     description?: string;
     created_at: string;
     updated_at: string;

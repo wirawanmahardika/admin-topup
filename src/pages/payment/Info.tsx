@@ -12,6 +12,9 @@ export default function PaymentInfo() {
         AxiosAuth.get("/payments").then(res => { dispatch({ type: "get-all", payload: res.data.data }) })
     }, [])
 
+    console.log(payments);
+
+
     const handleHapusPayment = async (id: string) => {
         const idToast = loadingToast()
         try {
@@ -39,6 +42,7 @@ export default function PaymentInfo() {
                             <th>Tipe</th>
                             <th>Channel</th>
                             <th>Status</th>
+                            <th>Potongan Midtrans</th>
                             <th>Deskripsi</th>
                             <th>Aksi</th>
                         </tr>
@@ -63,9 +67,8 @@ export default function PaymentInfo() {
                                         <span className="badge badge-error">Nonaktif</span>
                                     )}
                                 </td>
-                                <td>
-                                    <span className="text-sm">{p.description || "-"}</span>
-                                </td>
+                                <td><span className="text-sm">Rp {(p.midtrans_price).toLocaleString("id")}</span></td>
+                                <td><span className="text-sm">{p.description || "-"}</span></td>
                                 <td>
                                     <div className="flex gap-x-2 items-center">
                                         <NavLink to={`/payment/${p.id}/edit`} className="btn btn-accent btn-sm">Edit</NavLink>

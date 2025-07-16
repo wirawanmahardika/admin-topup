@@ -99,9 +99,9 @@ const TransactionDetailPage = () => {
 
     const getStatusIcon = (status: string) => {
         switch (status.toLowerCase()) {
-            case 'paid':
             case 'success':
             case 'sukses':
+            case 'capture':
             case 'settlement':
                 return <CheckCircle className="w-4 h-4" />;
             case 'pending':
@@ -121,11 +121,9 @@ const TransactionDetailPage = () => {
             const res = await AxiosAuth.get(`/transaction/${id}/${type}-status`)
             switch (type) {
                 case "topup":
-                    console.log(res.data.data);
                     setTransactionData(prev => ({ ...prev, topup_status: res.data.data.status }))
                     break;
                 case "payment":
-                    console.log(res.data);
                     setTransactionData(prev => ({ ...prev, payment_status: res.data.data.status }))
                     break
             }
