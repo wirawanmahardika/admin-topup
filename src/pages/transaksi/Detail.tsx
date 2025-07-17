@@ -124,7 +124,7 @@ const TransactionDetailPage = () => {
                     setTransactionData(prev => ({ ...prev, topup_status: res.data.data.status }))
                     break;
                 case "payment":
-                    setTransactionData(prev => ({ ...prev, payment_status: res.data.data.status }))
+                    setTransactionData(prev => ({ ...prev, payment_status: res.data.data.status, topup_status: res.data.data.topup_status }))
                     break
             }
             loadingSuccessToast(idToast, res.data.message)
