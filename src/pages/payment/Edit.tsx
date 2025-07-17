@@ -14,6 +14,7 @@ const paymentTypes = ["bank_transfer", "cstore", "qris", "echannel"];
 
 export default function EditPayment() {
     const { id } = useParams();
+    const [paymentType, setPaymentType] = useState("")
     const [payment, setPayment] = useState<PaymentType>();
     const [paymentIsActive, setPaymentIsActive] = useState(false);
     const [fees, setFees] = useState<{ amount: number; is_percentage: boolean }[]>([]);
@@ -22,6 +23,7 @@ export default function EditPayment() {
         AxiosAuth.get("/payment/" + id).then((res) => {
             const data = res.data.data;
             setPayment(data);
+            setPaymentType(data.type)
             setPaymentIsActive(data.active);
             setFees(data.payment_fees?.map((f: paymentFeeType) => ({
                 amount: f.amount,
@@ -78,7 +80,8 @@ export default function EditPayment() {
                     <select
                         className="select select-bordered w-full"
                         name="type"
-                        defaultValue={payment?.type}
+                        value={paymentType}
+                        onChange={(e) => setPaymentType(e.target.value)}
                         required
                     >
                         {paymentTypes.map((t) => (

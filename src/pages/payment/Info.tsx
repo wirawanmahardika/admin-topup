@@ -4,6 +4,20 @@ import { NavLink } from "react-router-dom";
 import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 import { ToastContainer } from "react-toastify";
 import { paymentInfoReducer } from "../../hooks/payment/Info/reducer";
+import type { paymentFeeType } from "../../types/paymentFeeType";
+
+function getMidtransFee(payment_fee: paymentFeeType[]) {
+    const resultArray = payment_fee.map((pf) => {
+        if (pf.is_percentage) {
+            return `${pf.amount}%`;
+        } else {
+            return pf.amount.toLocaleString("id");
+        }
+    });
+
+    return resultArray.join(" + ");
+}
+
 
 export default function PaymentInfo() {
     const [payments, dispatch] = useReducer(paymentInfoReducer, [])
@@ -64,7 +78,7 @@ export default function PaymentInfo() {
                                         <span className="badge badge-error">Nonaktif</span>
                                     )}
                                 </td>
-                                <td><span className="text-sm">Rp {(p.midtrans_price).toLocaleString("id")}</span></td>
+                                <td><span className="text-sm">{p.payment_fees ? getMidtransFee(p.payment_fees) : "Belum diatur"}</span></td>
                                 <td><span className="text-sm">{p.description || "-"}</span></td>
                                 <td>
                                     <div className="flex gap-x-2 items-center gap-2">

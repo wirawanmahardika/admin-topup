@@ -10,7 +10,6 @@ const paymentDefault: PaymentType = {
     name: "BCA Virtual Account",
     active: true,
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Bank_Central_Asia.svg/512px-Bank_Central_Asia.svg.png",
-    midtrans_price: 4000,
     description: "Pembayaran melalui Virtual Account BCA",
     created_at: "2024-01-01T10:00:00Z",
     updated_at: "2024-01-10T12:00:00Z",
@@ -45,10 +44,6 @@ export default function PaymentDetail() {
             })
     }, [])
 
-    console.log(payment);
-    
-
-
     return (
         <div className="min-h-screen bg-base-100 text-base-content p-6">
             <div className="max-w-4xl mx-auto bg-base-200 p-6 rounded-xl shadow-lg border border-base-300">
@@ -74,10 +69,10 @@ export default function PaymentDetail() {
                         <p className="text-sm text-gray-400 mb-1">Channel Code</p>
                         <p>{payment.channel_code || "-"}</p>
                     </div>
-                    <div>
+                    {/* <div>
                         <p className="text-sm text-gray-400 mb-1">Biaya Midtrans</p>
                         <p>Rp {payment.midtrans_price.toLocaleString("id-ID")}</p>
-                    </div>
+                    </div> */}
                     <div>
                         <p className="text-sm text-gray-400 mb-1">Dibuat pada</p>
                         <p>{new Date(payment.created_at).toLocaleString("id-ID")}</p>
