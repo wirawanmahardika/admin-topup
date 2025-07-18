@@ -9,7 +9,7 @@ export type transactionType = {
     buyer_sku_code: string,
     profit: number,
     payment_status: string,
-    topup_status: string,
+    topup_status: "Sukses" | "Gagal" | "Pending",
     created_at: string,
     updated_at: string,
     brand?: brandType,

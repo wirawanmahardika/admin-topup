@@ -39,9 +39,9 @@ export const TransactionFilters = ({
                 onChange={e => onStatusFilterChange(e.target.value as transactionType["topup_status"] | "")}
             >
                 <option value="">Semua Topup Status</option>
-                <option value="sukses">Sukses</option>
-                <option value="pending">Pending</option>
-                <option value="gagal">Gagal</option>
+                <option value="Sukses">Sukses</option>
+                <option value="Pending">Pending</option>
+                <option value="Gagal">Gagal</option>
             </select>
             
             <select
