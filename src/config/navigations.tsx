@@ -29,7 +29,6 @@ export default [
     icon: <User size={16} />,
     navs: [
       { name: "Info", to: "/profile" },
-      { name: "Edit", to: "/edit-profile" },
       { name: "Tambah Saldo", to: "/tambah-saldo" },
     ],
   },

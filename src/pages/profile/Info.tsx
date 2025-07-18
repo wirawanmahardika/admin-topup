@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AxiosAuth } from "../../utils/axios";
 import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 import { ToastContainer } from "react-toastify";
+import { NavLink } from "react-router-dom";
 
 type ProfilType = {
     fullname: string;
@@ -41,6 +42,7 @@ export default function ProfileInfo() {
                     </div>
                     <h2 className="text-2xl font-bold text-primary mb-1">Profil Admin</h2>
                     <span className="text-gray-500">{profil?.fullname}</span>
+                    <NavLink to={"/profile/edit"} className="btn btn-xs btn-accent mt-3">Edit Profil</NavLink>
                 </div>
                 {!profil ? (
                     <div className="text-center text-gray-400 py-8">Memuat data profil...</div>
