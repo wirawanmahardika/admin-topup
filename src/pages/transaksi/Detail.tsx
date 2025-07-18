@@ -269,7 +269,7 @@ const TransactionDetailPage = () => {
                                     <div className="avatar">
                                         <div className="w-16 h-16 rounded-xl bg-base-300">
                                             <img
-                                                src={transactionData.brand?.image}
+                                                src={transactionData.brand?.image || undefined}
                                                 alt={transactionData.brand?.name}
                                                 className="w-full h-full object-cover rounded-xl"
                                             />
@@ -317,7 +317,7 @@ const TransactionDetailPage = () => {
                                         <div className="avatar">
                                             <div className="w-12 h-12 rounded-full bg-base-300">
                                                 <img
-                                                    src={transactionData.brand?.image}
+                                                    src={transactionData.brand?.image || undefined}
                                                     alt={transactionData.brand?.name}
                                                     className="w-full h-full object-cover rounded-full"
                                                 />
