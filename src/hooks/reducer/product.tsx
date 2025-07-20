@@ -5,7 +5,7 @@ export function productReducer(state: productType[], action: productReducerActio
         case "get-all":
             return action.payload as productType[]
         case "delete":
-            return state.filter(s => s.id !== action.payload as number)
+            return state.filter(s => s.id !== action.payload as string)
         default:
             return state
     }
