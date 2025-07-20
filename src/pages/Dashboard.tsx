@@ -29,9 +29,9 @@ export default function Dashboard() {
     useEffect(() => {
         Promise.all([
             AxiosAuth.get("/dashboard/summary"),
-            AxiosAuth.get("http://localhost:3000/dashboard/recent-transaction"),
-            AxiosAuth.get("http://localhost:3000/dashboard/transaction-permonth"),
-            AxiosAuth.get("http://localhost:3000/dashboard/transaction-pergame"),
+            AxiosAuth.get("/dashboard/recent-transaction"),
+            AxiosAuth.get("/dashboard/transaction-permonth"),
+            AxiosAuth.get("/dashboard/transaction-pergame"),
         ]).then(([summaryData, recentTransactionsData, transactionPermonthData, transactionPergameData]) => {
             setSummary(summaryData.data.data)
             setRecentTransactions(recentTransactionsData.data.data)
