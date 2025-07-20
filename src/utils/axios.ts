@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 
 export const AxiosAuth = axios.create({
     baseURL: import.meta.env.VITE_SERVER_URL,
-    // withCredentials: true
+    withCredentials: true
 })
 
 AxiosAuth.interceptors.request.use((config) => {
