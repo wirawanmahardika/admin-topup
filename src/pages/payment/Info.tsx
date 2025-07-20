@@ -1,10 +1,11 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { AxiosAuth } from "../../utils/axios";
 import { NavLink } from "react-router-dom";
 import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 import { ToastContainer } from "react-toastify";
 import { paymentInfoReducer } from "../../hooks/payment/Info/reducer";
 import type { paymentFeeType } from "../../types/paymentFeeType";
+import ModalConfirmation, { openModal } from "../../components/Modal";
 
 function getMidtransFee(payment_fee: paymentFeeType[]) {
     const resultArray = payment_fee.map((pf) => {
@@ -21,6 +22,7 @@ function getMidtransFee(payment_fee: paymentFeeType[]) {
 
 export default function PaymentInfo() {
     const [payments, dispatch] = useReducer(paymentInfoReducer, [])
+    const [id, setId] = useState("")
 
     useEffect(() => {
         AxiosAuth.get("/payments").then(res => { dispatch({ type: "get-all", payload: res.data.data }) })
@@ -40,6 +42,7 @@ export default function PaymentInfo() {
     return (
         <div className="bg-base-100 rounded-lg shadow p-6 mx-auto w-full">
             <ToastContainer />
+            <ModalConfirmation id="delete-payment" message="Yakin ingin menghapus payment?" clickAction={() => handleHapusPayment(id)} />
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold mb-6">Daftar Metode Pembayaran</h2>
                 <NavLink to={"/payment/tambah"} className="btn btn-primary">Tambah Payment</NavLink>
@@ -84,7 +87,10 @@ export default function PaymentInfo() {
                                     <div className="flex gap-x-2 items-center gap-2">
                                         <NavLink to={`/payment/${p.id}/detail`} className="btn btn-info btn-sm">Detail</NavLink>
                                         <NavLink to={`/payment/${p.id}/edit`} className="btn btn-accent btn-sm">Edit</NavLink>
-                                        <button onClick={() => handleHapusPayment(p.id)} className="btn btn-error btn-sm">Hapus</button>
+                                        <button onClick={() => {
+                                            setId(p.id)
+                                            openModal("delete-payment")
+                                        }} className="btn btn-error btn-sm">Hapus</button>
                                     </div>
                                 </td>
                             </tr>

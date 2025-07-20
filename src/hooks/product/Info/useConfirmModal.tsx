@@ -37,7 +37,7 @@ export const ConfirmModal = ({ open, onClose, onConfirm, productName, isLoading 
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black bg-opacity-40">
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/40">
             <div className="bg-base-100 rounded-lg shadow-lg p-6 w-full max-w-sm mx-4">
                 <h3 className="font-bold text-lg mb-2">Konfirmasi Hapus</h3>
                 <p className="mb-4">

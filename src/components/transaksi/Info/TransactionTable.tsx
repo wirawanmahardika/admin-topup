@@ -3,6 +3,8 @@ import type { transactionType } from "../../../types/transactionType";
 import { TopupStatusSelect } from "./TopupStatusSelect";
 import { PaymentStatusBadge } from "./PaymentStatusBadge";
 import { NavLink } from "react-router-dom";
+import ModalConfirmation, { openModal } from "../../Modal";
+import { useState } from "react";
 
 interface TransactionTableProps {
     transactions: transactionType[];
@@ -11,12 +13,14 @@ interface TransactionTableProps {
     onDeleteTransaction: (id: string) => void;
 }
 
-export const TransactionTable = ({ 
-    transactions, 
-    isLoading, 
-    onUpdateTopupStatus, 
-    onDeleteTransaction 
+export const TransactionTable = ({
+    transactions,
+    isLoading,
+    onUpdateTopupStatus,
+    onDeleteTransaction
 }: TransactionTableProps) => {
+    const [id, setId] = useState("")
+
     if (isLoading) {
         return (
             <div className="flex justify-center items-center p-8">
@@ -27,6 +31,7 @@ export const TransactionTable = ({
 
     return (
         <div className="overflow-x-auto">
+            <ModalConfirmation id="delete-transaction" message="Yakin ingin menghapus transaksi?" clickAction={() => { onDeleteTransaction(id) }} />
             <table className="table w-full">
                 <thead>
                     <tr>
@@ -55,21 +60,20 @@ export const TransactionTable = ({
                                 <td>{trx.id}</td>
                                 <td>{trx.customer_number}</td>
                                 <td>
-                                    {trx.product?.product_name ?? 
+                                    {trx.product?.product_name ??
                                         <span className="italic text-red-300">None</span>
                                     }
                                 </td>
                                 <td>
-                                    {trx.brand?.name ?? 
+                                    {trx.brand?.name ??
                                         <span className="italic text-red-300">None</span>
                                     }
                                 </td>
                                 <td>Rp {trx.profit.toLocaleString()}</td>
                                 <td>{dayjs(trx.created_at).format("D MMMM YYYY, HH:mm")}</td>
                                 <td>
-                                    <span className={`badge ${
-                                        trx.brand?.operator === "sistem" ? "badge-info" : "badge-secondary"
-                                    }`}>
+                                    <span className={`badge ${trx.brand?.operator === "sistem" ? "badge-info" : "badge-secondary"
+                                        }`}>
                                         {trx.brand?.operator === "sistem" ? "Sistem" : "Manual"}
                                     </span>
                                 </td>
@@ -85,11 +89,15 @@ export const TransactionTable = ({
                                 </td>
                                 <td className="space-x-3">
                                     <NavLink to={`/transaksi/${trx.id}/detail`}
-                                        className="btn btn-info btn-sm"                                    >
+                                        className="btn btn-info btn-sm">
                                         Detail
                                     </NavLink>
-                                    <button 
-                                        onClick={() => onDeleteTransaction(trx.id)} 
+                                    <button
+                                        onClick={() => {
+                                            setId(trx.id)
+                                            openModal("delete-transaction")
+                                        }}
+                                        // onClick={() => onDeleteTransaction(trx.id)} 
                                         className="btn btn-error btn-sm"
                                     >
                                         Hapus
