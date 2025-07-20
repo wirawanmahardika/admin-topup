@@ -1,17 +1,57 @@
 type ManualProduct = {
+    id: string;
+    id_brand: string;
+    brand: string;
+    buyer_sku_code: string;
+    category: string;
     product_name: string;
-    resell_price: number;
+    desc: string;
+    type: string;
+
     price: number;
+    resell_price: number | null;
+    stock: number;
+
+    multi: boolean;
     unlimited_stock: boolean;
-    digiflazz_product: boolean;
+    buyer_product_status: boolean;
+    seller_product_status: boolean;
+
+    seller_name: string;
+
+    start_cut_off: string; // format "HH:mm"
+    end_cut_off: string;   // format "HH:mm"
+
+    created_at: string; // ISO 8601 format
+    updated_at: string; // ISO 8601 format
 };
 
 type ThirdPartyProduct = {
+    id: string;
+    id_brand: string;
+    brand: string;
+    buyer_sku_code: string;
+    category: string;
     product_name: string;
-    resell_price: number;
+    desc: string;
+    type: string;
+
     price: number;
+    resell_price: number | null;
+    stock: number;
+
+    multi: boolean;
     unlimited_stock: boolean;
-    digiflazz_product: boolean;
+    buyer_product_status: boolean;
+    seller_product_status: boolean;
+
+    seller_name: string;
+
+    start_cut_off: string; // format "HH:mm"
+    end_cut_off: string;   // format "HH:mm"
+
+    created_at: string; // ISO 8601 format
+    updated_at: string; // ISO 8601 format
 };
 
 export function ProductPreview({

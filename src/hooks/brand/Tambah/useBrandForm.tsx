@@ -2,13 +2,63 @@ import { useState } from "react";
 import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../../utils/toast";
 import { AxiosAuth } from "../../../utils/axios";
 
-type Product = {
+export interface Product {
+    id: string;
+    id_brand: string;
+    brand: string;
+    buyer_sku_code: string;
+    category: string;
     product_name: string;
-    resell_price: number;
+    desc: string;
+    type: string;
+
     price: number;
+    resell_price: number | null;
+    stock: number;
+
+    multi: boolean;
     unlimited_stock: boolean;
-    digiflazz_product: boolean;
+    buyer_product_status: boolean;
+    seller_product_status: boolean;
+
+    seller_name: string;
+
+    start_cut_off: string; // format "HH:mm"
+    end_cut_off: string;   // format "HH:mm"
+
+    created_at: string; // ISO 8601 format
+    updated_at: string; // ISO 8601 format
+}
+
+export const defaultProduct: Product = {
+    id: "",
+    id_brand: "",
+    brand: "",
+    buyer_sku_code: "",
+    category: "",
+    product_name: "",
+    desc: "",
+    type: "",
+
+    price: 0,
+    resell_price: null,
+    stock: 0,
+
+    multi: false,
+    unlimited_stock: false,
+    buyer_product_status: false,
+    seller_product_status: false,
+
+    seller_name: "",
+
+    start_cut_off: "",
+    end_cut_off: "",
+
+    created_at: "0001-01-01T00:00:00Z",
+    updated_at: "0001-01-01T00:00:00Z"
 };
+
+
 
 export const useBrandForm = () => {
     const [name, setName] = useState("");
@@ -17,13 +67,7 @@ export const useBrandForm = () => {
     const [tab, setTab] = useState<"thirdparty" | "manual">("thirdparty");
     const [products, setProducts] = useState<Product[]>([]);
     const [manualProducts, setManualProducts] = useState<Product[]>([]);
-    const [manualInput, setManualInput] = useState<Product>({
-        product_name: "",
-        resell_price: 0,
-        price: 0,
-        unlimited_stock: true,
-        digiflazz_product: false,
-    });
+    const [manualInput, setManualInput] = useState<Product>(defaultProduct);
     const [loading, setLoading] = useState(false);
     const [loadingProducts, setLoadingProducts] = useState(false);
 
@@ -33,14 +77,7 @@ export const useBrandForm = () => {
         const idToast = loadingToast(`Sedang mengambil data produk dengan brand ${brandName}`);
         try {
             const res = await AxiosAuth.get("/products/digiflazz", { params: { brand: brandName } });
-            const arr = (res.data.data as any[]).map((p: any) => ({
-                product_name: p.product_name,
-                resell_price: 0,
-                price: p.price,
-                unlimited_stock: p.unlimited_stock ?? true,
-                digiflazz_product: true,
-            }));
-            setProducts(arr);
+            setProducts(res.data.data);
             loadingSuccessToast(idToast, res.data.message);
         } catch (error: any) {
             loadingErrorToast(idToast, error.response?.data?.message ?? "Gagal memuat produk dari third party!");
@@ -66,15 +103,10 @@ export const useBrandForm = () => {
     };
 
     const handleAddManualProduct = () => {
-        if (!manualInput.product_name || manualInput.resell_price <= 0) return;
+        if (manualInput.resell_price !== null && manualInput.resell_price <= 0) return
+        if (!manualInput.product_name) return;
         setManualProducts((prev) => [...prev, { ...manualInput }]);
-        setManualInput({
-            product_name: "",
-            resell_price: 0,
-            price: 0,
-            unlimited_stock: true,
-            digiflazz_product: false,
-        });
+        setManualInput(defaultProduct);
     };
 
     const handleRemoveManualProduct = (idx: number) => {

@@ -79,7 +79,6 @@ export default function TambahBrand() {
                 resell_price: p.resell_price,
                 price: 0,
                 unlimited_stock: true,
-                digiflazz_product: false,
             }));
             formData.append("products", JSON.stringify(readyManual));
         }
@@ -188,7 +187,7 @@ export default function TambahBrand() {
                                         name="resell_price"
                                         className="input input-bordered w-32"
                                         placeholder="Resell Price"
-                                        value={manualInput.resell_price}
+                                        value={manualInput?.resell_price || 0}
                                         min={0}
                                         onChange={handleManualInputChange}
                                     />
