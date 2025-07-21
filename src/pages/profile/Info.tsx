@@ -1,36 +1,9 @@
-import { useEffect, useState } from "react";
-import { AxiosAuth } from "../../utils/axios";
-import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 import { ToastContainer } from "react-toastify";
 import { NavLink } from "react-router-dom";
-
-type ProfilType = {
-    fullname: string;
-    email: string;
-    saldo: number;
-    password: string;
-};
+import { useProfile } from "../../hooks/profile/Info/useProfile";
 
 export default function ProfileInfo() {
-    const [profil, setProfil] = useState<ProfilType | null>(null);
-
-    useEffect(() => {
-        AxiosAuth.get("/user/data").then(res => { setProfil(res.data.data) })
-    }, []);
-
-    const handleRefreshSaldo = async () => {
-        const idToast = loadingToast()
-        try {
-            const res = await AxiosAuth.get("/user/saldo")
-            setProfil(prev => {
-                if(!prev) return null
-                return {...prev, saldo: res.data.data}
-            })
-            loadingSuccessToast(idToast, res.data.message)
-        } catch (error: any) {
-            loadingErrorToast(idToast, error.response?.data.message ?? "Terjadi kesalahan")
-        }
-    }
+    const { profil, handleRefreshSaldo } = useProfile()
 
     return (
         <div className="flex justify-center items-center min-h-[60vh] bg-base-200">
