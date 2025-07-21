@@ -7,7 +7,7 @@ import {
     loadingToast,
 } from "../../utils/toast";
 
-const paymentTypes = ["bank_transfer", "cstore", "qris", "echannel"];
+const paymentTypes = ["bank_transfer", "cstore", "qris", "echannel", "ewallet"];
 
 export default function TambahPayment() {
     const [fees, setFees] = useState([
