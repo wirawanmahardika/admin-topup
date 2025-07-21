@@ -9,6 +9,7 @@ import { AxiosAuth } from '../../utils/axios';
 import { useParams } from 'react-router-dom';
 import { loadingErrorToast, loadingSuccessToast, loadingToast } from '../../utils/toast';
 import { ToastContainer } from 'react-toastify';
+import type { transactionType } from '../../types/transactionType';
 
 // Sample transaction data
 const transactionDataDefault = {
@@ -55,6 +56,16 @@ const transactionDataDefault = {
     }
 };
 
+const updateTopupStatus = async (trxId: string, newStatus: transactionType["topup_status"]) => {
+    const toastId = loadingToast("Sedang memproses update status transaksi ke " + newStatus)
+    try {
+        const res = await AxiosAuth.patch(`/transaction/${trxId}/topup-status`, { status: newStatus });
+        loadingSuccessToast(toastId, res.data.message);
+    } catch (err) {
+        loadingErrorToast(toastId, "Gagal update status!");
+    }
+};
+
 const TransactionDetailPage = () => {
     const { id } = useParams()
     const [copied, setCopied] = useState(false);
@@ -64,6 +75,9 @@ const TransactionDetailPage = () => {
         AxiosAuth.get(`/transaction/${id}`)
             .then(res => { setTransactionData(res.data.data) })
     }, [])
+
+    console.log(transactionData);
+
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleString('id-ID', {
@@ -370,13 +384,23 @@ const TransactionDetailPage = () => {
                                                 {getStatusIcon(transactionData.topup_status)}
                                                 <span className="capitalize">{transactionData.topup_status}</span>
                                             </div>
-                                            <button disabled={
-                                                ["pending", "deny", "cancel", "expire", "failure", "refund", "partial_refund"]
-                                                    .some(v => v === transactionData.payment_status.toLowerCase())
+                                            {transactionData.brand.operator === "sistem" ?
+                                                <button disabled={
+                                                    ["pending", "deny", "cancel", "expire", "failure", "refund", "partial_refund"]
+                                                        .some(v => v === transactionData.payment_status.toLowerCase())
+                                                }
+                                                    onClick={() => handleRefreshStatus("topup")} className='btn btn-primary btn-xs'>
+                                                    Refresh
+                                                </button>
+                                                :
+                                                <select onChange={async e => {
+                                                    if (id) await updateTopupStatus(id, e.target.value as transactionType["topup_status"])
+                                                }} className='select select-xs select-info'>
+                                                    <option value="Sukses">Sukses</option>
+                                                    <option value="Pending">Pending</option>
+                                                    <option value="Gagal">Gagal</option>
+                                                </select>
                                             }
-                                                onClick={() => handleRefreshStatus("topup")} className='btn btn-primary btn-xs'>
-                                                Refresh
-                                            </button>
                                         </div>
                                     </div>
                                 </div>

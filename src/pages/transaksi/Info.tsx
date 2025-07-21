@@ -11,7 +11,6 @@ export default function TransaksiInfo() {
     const {
         transactions,
         isLoading,
-        updateTopupStatus,
         deleteTransaction
     } = useTransactions();
 
@@ -64,7 +63,6 @@ export default function TransaksiInfo() {
             <TransactionTable
                 transactions={filteredTransactions}
                 isLoading={isLoading}
-                onUpdateTopupStatus={updateTopupStatus}
                 onDeleteTransaction={deleteTransaction}
             />
 

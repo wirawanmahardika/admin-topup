@@ -10,7 +10,7 @@ import {
 import { ToastContainer } from "react-toastify";
 import type { paymentFeeType } from "../../types/paymentFeeType";
 
-const paymentTypes = ["bank_transfer", "cstore", "qris", "echannel", "ewallet"];
+const paymentTypes = ["bank_transfer", "cstore", "qris", "echannel", "ewallet", "cardless_credit"];
 
 export default function EditPayment() {
     const { id } = useParams();

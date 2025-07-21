@@ -9,14 +9,12 @@ import { useState } from "react";
 interface TransactionTableProps {
     transactions: transactionType[];
     isLoading: boolean;
-    onUpdateTopupStatus: (trxId: string, newStatus: transactionType["topup_status"]) => void;
     onDeleteTransaction: (id: string) => void;
 }
 
 export const TransactionTable = ({
     transactions,
     isLoading,
-    onUpdateTopupStatus,
     onDeleteTransaction
 }: TransactionTableProps) => {
     const [id, setId] = useState("")
@@ -83,8 +81,6 @@ export const TransactionTable = ({
                                 <td>
                                     <TopupStatusSelect
                                         value={trx.topup_status}
-                                        onChange={val => onUpdateTopupStatus(trx.id, val)}
-                                        disabled={trx.brand?.operator === "sistem"}
                                     />
                                 </td>
                                 <td className="space-x-3">
