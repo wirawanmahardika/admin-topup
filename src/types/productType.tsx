@@ -3,7 +3,6 @@ import type { brandType } from "./brandType";
 export type productType = {
     id: string;
     id_brand: string;
-    digiflazz_product: boolean,
     product_name: string;
     category: string;
     type: string;
