@@ -1,43 +1,11 @@
-import { useEffect, useReducer, useState } from "react";
-import { AxiosAuth } from "../../utils/axios";
 import { NavLink } from "react-router-dom";
-import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 import { ToastContainer } from "react-toastify";
-import { paymentInfoReducer } from "../../hooks/payment/Info/reducer";
-import type { paymentFeeType } from "../../types/paymentFeeType";
-import ModalConfirmation, { openModal } from "../../components/Modal";
-
-function getMidtransFee(payment_fee: paymentFeeType[]) {
-    const resultArray = payment_fee.map((pf) => {
-        if (pf.is_percentage) {
-            return `${pf.amount}%`;
-        } else {
-            return pf.amount.toLocaleString("id");
-        }
-    });
-
-    return resultArray.join(" + ");
-}
-
+import ModalConfirmation from "../../components/Modal";
+import { PaymentsTableDisplay } from "../../components/payment/Info/PaymentTableDisplay";
+import { usePaymentInfo } from "../../hooks/payment/Info/usePaymentInfo";
 
 export default function PaymentInfo() {
-    const [payments, dispatch] = useReducer(paymentInfoReducer, [])
-    const [id, setId] = useState("")
-
-    useEffect(() => {
-        AxiosAuth.get("/payments").then(res => { dispatch({ type: "get-all", payload: res.data.data }) })
-    }, [])
-
-    const handleHapusPayment = async (id: string) => {
-        const idToast = loadingToast()
-        try {
-            const res = await AxiosAuth.delete("/payment/" + id)
-            dispatch({ type: "delete", payload: id })
-            loadingSuccessToast(idToast, res.data.message)
-        } catch (error: any) {
-            loadingErrorToast(idToast, error.response?.data.message ?? "Terjadi kesalahan")
-        }
-    }
+    const { payments, id, setId, handleHapusPayment } = usePaymentInfo()
 
     return (
         <div className="bg-base-100 rounded-lg shadow p-6 mx-auto w-full">
@@ -47,57 +15,7 @@ export default function PaymentInfo() {
                 <h2 className="text-xl font-bold mb-6">Daftar Metode Pembayaran</h2>
                 <NavLink to={"/payment/tambah"} className="btn btn-primary">Tambah Payment</NavLink>
             </div>
-            <div className="overflow-x-auto">
-                <table className="table w-full">
-                    <thead>
-                        <tr>
-                            <th>Logo</th>
-                            <th>Display Name</th>
-                            <th>Tipe</th>
-                            <th>Channel</th>
-                            <th>Status</th>
-                            <th>Potongan Midtrans</th>
-                            <th>Deskripsi</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {payments.map((p) => (
-                            <tr key={p.id}>
-                                <td>
-                                    <div className="avatar">
-                                        <div className="w-12 rounded">
-                                            <img src={p.image} alt={p.name} />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="font-semibold">{p.name}</td>
-                                <td>{p.type}</td>
-                                <td>{p.channel_code || "-"}</td>
-                                <td>
-                                    {p.active ? (
-                                        <span className="badge badge-success">Aktif</span>
-                                    ) : (
-                                        <span className="badge badge-error">Nonaktif</span>
-                                    )}
-                                </td>
-                                <td><span className="text-sm">{p.payment_fees ? getMidtransFee(p.payment_fees) : "Belum diatur"}</span></td>
-                                <td><span className="text-sm">{p.description || "-"}</span></td>
-                                <td>
-                                    <div className="flex gap-x-2 items-center gap-2">
-                                        <NavLink to={`/payment/${p.id}/detail`} className="btn btn-info btn-sm">Detail</NavLink>
-                                        <NavLink to={`/payment/${p.id}/edit`} className="btn btn-accent btn-sm">Edit</NavLink>
-                                        <button onClick={() => {
-                                            setId(p.id)
-                                            openModal("delete-payment")
-                                        }} className="btn btn-error btn-sm">Hapus</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+            <PaymentsTableDisplay setId={setId} payments={payments} />
         </div>
     )
 }

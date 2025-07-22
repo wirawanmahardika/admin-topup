@@ -17,3 +17,25 @@ export type paymentReducerActionType = {
     type: "get-all" | "delete",
     payload: PaymentType[] | string
 }
+
+export const paymentDefault: PaymentType = {
+    id: "",
+    type: "",
+    channel_code: "",
+    name: "",
+    active: false,
+    image: "",
+    description: "",
+    created_at: "",
+    updated_at: "",
+    payment_fees: [
+        {
+            id: "",
+            id_payment_type: "",
+            amount: 0,
+            is_percentage: false,
+            created_at: "",
+            updated_at: ""
+        }
+    ]
+};
