@@ -1,53 +1,9 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { AxiosAuth } from "../../utils/axios";
-import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../utils/toast";
 import { ToastContainer } from "react-toastify";
+import { useEditInputFields } from "../../hooks/brand/EditInputFields/useEditInputFields";
 
 export default function EditInputFieldBrand() {
-    const { id } = useParams()
-    const [inputField, setInputField] = useState({
-        input_key: "",
-        label: "",
-        placeholder: "",
-    });
-    const [inputFields, setInputFields] = useState<
-        { input_key: string; label: string; placeholder: string; order_index: number }[]
-    >([]);
-
-    const handleInputFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputField({ ...inputField, [e.target.name]: e.target.value });
-    };
-
-    const handleAddInputField = () => {
-        if (!inputField.input_key || !inputField.label) return;
-        setInputFields([
-            ...inputFields,
-            {
-                ...inputField,
-                order_index: inputFields.length + 1,
-            },
-        ]);
-        setInputField({ input_key: "", label: "", placeholder: "" });
-    };
-
-    const handleRemoveInputField = (idx: number) => {
-        setInputFields(inputFields.filter((_, i) => i !== idx));
-    };
-
-    const handleUpdateEditInputFields = async () => {
-        const idToast = loadingToast()
-        try {
-            console.log(inputFields);
-            
-            const res = await AxiosAuth.put("/brand-input-field/" + id, {input_fields: inputFields})
-            loadingSuccessToast(idToast, res.data.message)
-        } catch (error: any) {
-            console.log(error);
-            loadingErrorToast(idToast, error.response?.data.message ?? "Terjadi kesalahan")
-        }
-    }
-
+    const { inputField, inputFields, handleRemoveInputField, handleUpdateEditInputFields, handleInputFieldChange, handleAddInputField, } = useEditInputFields()
+    
     return <div className="bg-base-100 rounded-lg shadow p-6 w-full lg:w-2/3 ">
         <ToastContainer />
         <div className="flex flex-col gap-y-4 ">
