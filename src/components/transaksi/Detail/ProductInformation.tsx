@@ -33,11 +33,11 @@ export function ProductInformation({ transactionData, formatCurrency }: props) {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div className="stat bg-base-100 rounded-lg p-3">
                             <div className="stat-title text-xs">Kategori</div>
-                            <div className="stat-value text-sm">{transactionData.product?.category}</div>
+                            <div className="stat-value text-sm">{transactionData.brand?.operator === "sistem" ? transactionData.product?.category : "Tidak Diatur"}</div>
                         </div>
                         <div className="stat bg-base-100 rounded-lg p-3">
                             <div className="stat-title text-xs">Tipe</div>
-                            <div className="stat-value text-sm">{transactionData.product?.type}</div>
+                            <div className="stat-value text-sm">{transactionData.brand?.operator === "sistem" ? transactionData.product?.type : "Tidak Diatur"}</div>
                         </div>
                         <div className="stat bg-base-100 rounded-lg p-3">
                             <div className="stat-title text-xs">Harga Jual</div>
@@ -45,7 +45,7 @@ export function ProductInformation({ transactionData, formatCurrency }: props) {
                         </div>
                         <div className="stat bg-base-100 rounded-lg p-3">
                             <div className="stat-title text-xs">Harga Beli</div>
-                            <div className="stat-value text-sm">{formatCurrency(transactionData.product?.price)}</div>
+                            <div className="stat-value text-sm">{transactionData.brand?.operator === "sistem" ? formatCurrency(transactionData.product?.price) : "Tidak Diatur"}</div>
                         </div>
                     </div>
                 </div>

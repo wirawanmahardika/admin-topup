@@ -1,4 +1,4 @@
-import { Calendar, Clock, Code, DollarSign, Package, Phone, Tag } from "lucide-react";
+import { Calendar, Clock, Code, DollarSign, Gamepad2, Package, Tag } from "lucide-react";
 import type { transactionType } from "../../../types/transactionType";
 
 type props = {
@@ -41,11 +41,11 @@ export function InformasiTransaksi({ transactionData, formatCurrency }: props) {
                     <div className="flex items-center space-x-4">
                         <div className="placeholder">
                             <div className="bg-success text-success-content rounded-full size-12 flex items-center justify-center">
-                                <Phone className="size-5 m-auto" />
+                                <Gamepad2 className="size-5 m-auto" />
                             </div>
                         </div>
                         <div>
-                            <p className="text-sm text-base-content/70">Nomor Pelanggan</p>
+                            <p className="text-sm text-base-content/70">ID Akun</p>
                             <p className="font-semibold">{transactionData.customer_number}</p>
                         </div>
                     </div>
