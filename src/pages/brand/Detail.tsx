@@ -30,7 +30,7 @@ export default function DetailBrand() {
       <ToastContainer />
       <h2 className="text-2xl font-bold mb-6">Detail Brand</h2>
       <div className="flex flex-col gap-6">
-        <DataCustomer brand={brand} id={id} />
+        <DataCustomer brand={brand} />
         <InputFields id={id} brand={brand} />
       </div>
       <div className="flex justify-start mt-6">

@@ -8,7 +8,7 @@ const TruncateText = ({ text, maxLength }: TruncateTextProps) => {
     ? text.substring(0, maxLength - 3) + '...'
     : text;
 
-  return <p title={text}>{truncated}</p>;
+  return <span title={text}>{truncated}</span>;
 };
 
 export default TruncateText
