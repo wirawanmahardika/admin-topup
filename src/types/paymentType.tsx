@@ -1,5 +1,7 @@
 import type { paymentFeeType } from "./paymentFeeType";
 
+export const paymentTypes = ["bank_transfer", "cstore", "qris", "echannel", "ewallet", "cardless_credit"];
+
 export type PaymentType = {
     id: string;
     type: string;

@@ -1,53 +1,9 @@
-import { useState } from "react";
 import { ToastContainer } from "react-toastify";
-import { AxiosAuth } from "../../utils/axios";
-import {
-    loadingErrorToast,
-    loadingSuccessToast,
-    loadingToast,
-} from "../../utils/toast";
-
-const paymentTypes = ["bank_transfer", "cstore", "qris", "echannel", "ewallet", "cardless_credit"];
+import { paymentTypes } from "../../types/paymentType";
+import { uesTambahPayment } from "../../hooks/payment/Tambah/useTambahPayment";
 
 export default function TambahPayment() {
-    const [fees, setFees] = useState([
-        { amount: 0, is_percentage: false },
-    ]);
-
-    const handleFeeChange = (index: number, field: string, value: any) => {
-        const updated = [...fees];
-        updated[index] = { ...updated[index], [field]: value };
-        setFees(updated);
-    };
-
-    const addFee = () => {
-        setFees([...fees, { amount: 0, is_percentage: false }]);
-    };
-
-    const removeFee = (index: number) => {
-        const updated = fees.filter((_, i) => i !== index);
-        setFees(updated);
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-
-        // Tambahkan payment_fees ke formData manual
-        formData.append("payment_fees", JSON.stringify(fees));
-
-        const idToast = loadingToast();
-        try {
-            const res = await AxiosAuth.post("/payment", formData);
-            loadingSuccessToast(idToast, res.data.message);
-        } catch (error: any) {
-            loadingErrorToast(
-                idToast,
-                error.response?.data.message ?? "Terjadi kesalahan"
-            );
-        }
-    };
-
+    const { fees, handleSubmit, handleFeeChange, addFee, removeFee } = uesTambahPayment()
     return (
         <div className="bg-base-100 rounded-lg shadow p-6 max-w-2xl mx-auto">
             <ToastContainer />
