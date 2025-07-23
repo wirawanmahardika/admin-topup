@@ -40,8 +40,8 @@ export function InformasiTransaksi({ transactionData, formatCurrency }: props) {
 
                     <div className="flex items-center space-x-4">
                         <div className="placeholder">
-                            <div className="bg-success text-success-content rounded-full size-12 flex items-center justify-center">
-                                <Gamepad2 className="size-5 m-auto" />
+                            <div className="bg-primary text-success-content rounded-full size-12 flex items-center justify-center">
+                                <Gamepad2 className="size-5 m-auto text-white" />
                             </div>
                         </div>
                         <div>
