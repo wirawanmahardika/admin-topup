@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
 import {
     Chart as ChartJS,
@@ -21,24 +21,27 @@ import dayjs from "dayjs";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 export default function Dashboard() {
+    const [time, setTime] = useState<"" | "year" | "month">("")
+
     const [recentTransactions, setRecentTransactions] = useState<transactionType[] | null>(null)
     const [transactionPermonth, setTransactionPermonth] = useState<transactionPermonthType[] | null>(null)
     const [transactionPergame, setTransactionPergame] = useState<transactionPergameType[] | null>(null)
     const [summary, setSummary] = useState<sumarryDashboardType | null>(null);
 
     useEffect(() => {
+        const params = { params: { time } }
         Promise.all([
-            AxiosAuth.get("/dashboard/summary"),
+            AxiosAuth.get("/dashboard/summary", params),
             AxiosAuth.get("/dashboard/recent-transaction"),
             AxiosAuth.get("/dashboard/transaction-permonth"),
-            AxiosAuth.get("/dashboard/transaction-pergame"),
+            AxiosAuth.get("/dashboard/transaction-pergame", params),
         ]).then(([summaryData, recentTransactionsData, transactionPermonthData, transactionPergameData]) => {
             setSummary(summaryData.data.data)
             setRecentTransactions(recentTransactionsData.data.data)
             setTransactionPermonth(transactionPermonthData.data.data)
             setTransactionPergame(transactionPergameData.data.data)
         })
-    }, [])
+    }, [time])
 
     const fullMonthData = getFullMonthData(transactionPermonth);
     const barData = {
@@ -77,7 +80,7 @@ export default function Dashboard() {
         },
     };
 
-    const doughnutData = {
+    const doughnutData = useMemo(() => ({
         labels: transactionPergame?.map(g => g.game),
         datasets: [
             {
@@ -88,19 +91,24 @@ export default function Dashboard() {
                     : doughnutColors,
             },
         ],
-    };
+    }), [transactionPergame, time]);
 
-    const doughnutOptions = {
+    const doughnutOptions = useMemo(() => ({
         plugins: {
             legend: { position: "bottom" as const },
             title: { display: true, text: "Distribusi Penjualan per Game" },
         },
-    };
+    }), [transactionPergame, time]);
 
     return (
         <div className="bg-base-100 rounded-lg shadow p-6 mx-auto">
             <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
                 <h2 className="text-xl font-bold">Dashboard Penjualan</h2>
+                <select onChange={(e) => setTime(e.target.value as "" | "year" | "month")} className="select select-primary">
+                    <option value="">Semua</option>
+                    <option value="year">Tahun Ini</option>
+                    <option value="month">Bulan Ini</option>
+                </select>
             </div>
             {/* Summary Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -112,10 +120,10 @@ export default function Dashboard() {
             {/* Charts */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <ChartCard>
-                    <Bar data={barData} options={barOptions} />
+                    <Bar height={"250%"} data={barData} options={barOptions} />
                 </ChartCard>
                 <ChartCard>
-                    <Doughnut data={doughnutData} options={doughnutOptions} />
+                    <Doughnut key={"bar" + Date.now()} data={doughnutData} options={doughnutOptions} />
                 </ChartCard>
             </div>
             {/* Recent Transactions Table (dummy) */}

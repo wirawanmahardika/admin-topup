@@ -25,8 +25,8 @@ export default function RecentTransactionTable({ transactionData }: { transactio
                             <tr key={idx}>
                                 <td>{idx + 1}</td>
                                 <td>{trx.customer_number}</td>
-                                <td>{trx.product?.product_name}</td>
-                                <td>{trx.brand?.name}</td>
+                                <td>{trx.product?.product_name ?? <i className="text-error">Produk tidak ada</i>}</td>
+                                <td>{trx.brand?.name ?? <i className="text-error">Game tidak ada</i>}</td>
                                 <td>Rp {(trx.product?.resell_price)?.toLocaleString()}</td>
                                 <td>
                                     {trx.topup_status === "Sukses" && <span className="badge badge-success">Berhasil</span>}
