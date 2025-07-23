@@ -11,6 +11,8 @@ export const useEditPayment = () => {
     const [payment, setPayment] = useState<PaymentType>();
     const [paymentIsActive, setPaymentIsActive] = useState(false);
     const [fees, setFees] = useState<{ amount: number; is_percentage: boolean }[]>([]);
+    const [cancelable, setCancelable] = useState(false)
+    const [refundable, setRefundable] = useState(false)
 
     useEffect(() => {
         AxiosAuth.get("/payment/" + id).then((res) => {
@@ -18,6 +20,10 @@ export const useEditPayment = () => {
             setPayment(data);
             setPaymentType(data.type)
             setPaymentIsActive(data.active);
+
+            setCancelable(data.cancel_enable)
+            setRefundable(data.refund_enable)
+
             setFees(data.payment_fees?.map((f: paymentFeeType) => ({
                 amount: f.amount,
                 is_percentage: f.is_percentage
@@ -47,6 +53,8 @@ export const useEditPayment = () => {
         const formData = new FormData(e.currentTarget);
         formData.append("active", String(paymentIsActive));
         formData.append("payment_fees", JSON.stringify(fees));
+        formData.append("cancelable", String(cancelable));
+        formData.append("refundable", String(refundable));
 
         const idToast = loadingToast();
         const isValidFees = fees.every(f => typeof f.amount === 'number' && !isNaN(f.amount));
@@ -64,6 +72,8 @@ export const useEditPayment = () => {
 
     return {
         payment, handleSubmit, addFee, removeFee, handleFeeChange, paymentType,
-        paymentIsActive, setPaymentIsActive, setPaymentType, fees
+        paymentIsActive, setPaymentIsActive, setPaymentType, fees,
+        cancelable, setCancelable,
+        refundable, setRefundable
     }
 }

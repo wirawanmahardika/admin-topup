@@ -3,9 +3,16 @@ import { paymentTypes } from "../../types/paymentType";
 import { uesTambahPayment } from "../../hooks/payment/Tambah/useTambahPayment";
 
 export default function TambahPayment() {
-    const { fees, handleSubmit, handleFeeChange, addFee, removeFee } = uesTambahPayment()
+    const { fees,
+        handleSubmit,
+        handleFeeChange, 
+        addFee, 
+        removeFee,
+        cancelable, setCancelable,
+        refundable, setRefundable
+    } = uesTambahPayment()
 
-    
+
     return (
         <div className="bg-base-100 rounded-lg shadow p-6 max-w-2xl mx-auto">
             <ToastContainer />
@@ -42,8 +49,9 @@ export default function TambahPayment() {
                             <span className="label-text font-medium">Cancelable</span>
                             <input
                                 type="checkbox"
-                                name="cancelable"
                                 className="checkbox checkbox-primary"
+                                checked={cancelable}
+                                onChange={(e) => setCancelable(e.target.checked)}
                             />
                         </label>
                     </div>
@@ -54,8 +62,9 @@ export default function TambahPayment() {
                             <span className="label-text font-medium">Refundable</span>
                             <input
                                 type="checkbox"
-                                name="refundable"
                                 className="checkbox checkbox-primary"
+                                checked={refundable}
+                                onChange={(e) => setRefundable(e.target.checked)}
                             />
                         </label>
                     </div>

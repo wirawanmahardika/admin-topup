@@ -3,7 +3,18 @@ import { paymentTypes } from "../../types/paymentType";
 import { ToastContainer } from "react-toastify";
 
 export default function EditPayment() {
-    const { handleSubmit, handleFeeChange, paymentType, payment, setPaymentIsActive, paymentIsActive, setPaymentType, addFee, fees, removeFee } = useEditPayment()
+    const { handleSubmit,
+        handleFeeChange,
+        paymentType,
+        payment,
+        setPaymentIsActive,
+        paymentIsActive,
+        setPaymentType,
+        addFee,
+        fees,
+        removeFee, 
+        cancelable, setCancelable, refundable, setRefundable
+    } = useEditPayment()
 
     return (
         <div className="bg-base-100 rounded-lg shadow p-6 max-w-2xl mx-auto">
@@ -38,6 +49,34 @@ export default function EditPayment() {
                         placeholder="Masukkan channel (BNI, QRIS, dsb)"
                         required
                     />
+                </div>
+
+                <div className="flex gap-x-5">
+                    {/* AKTIVASI CANCEL */}
+                    <div className="form-control">
+                        <label className="label cursor-pointer">
+                            <span className="label-text font-medium">Cancelable</span>
+                            <input
+                                type="checkbox"
+                                className="checkbox checkbox-primary"
+                                checked={cancelable}
+                                onChange={(e) => setCancelable(e.target.checked)}
+                            />
+                        </label>
+                    </div>
+
+                    {/* AKTIVASI REFUND */}
+                    <div className="form-control">
+                        <label className="label cursor-pointer">
+                            <span className="label-text font-medium">Refundable</span>
+                            <input
+                                type="checkbox"
+                                className="checkbox checkbox-primary"
+                                checked={refundable}
+                                onChange={(e) => setRefundable(e.target.checked)}
+                            />
+                        </label>
+                    </div>
                 </div>
 
                 <div>

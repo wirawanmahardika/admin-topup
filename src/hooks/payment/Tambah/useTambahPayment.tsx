@@ -3,9 +3,9 @@ import { loadingErrorToast, loadingSuccessToast, loadingToast } from "../../../u
 import { AxiosAuth } from "../../../utils/axios";
 
 export const uesTambahPayment = () => {
-    const [fees, setFees] = useState([
-        { amount: 0, is_percentage: false },
-    ]);
+    const [fees, setFees] = useState([{ amount: 0, is_percentage: false }]);
+    const [cancelable, setCancelable] = useState(false)
+    const [refundable, setRefundable] = useState(false)
 
     const handleFeeChange = (index: number, field: string, value: any) => {
         const updated = [...fees];
@@ -26,25 +26,25 @@ export const uesTambahPayment = () => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
 
-        // Tambahkan payment_fees ke formData manual
         formData.append("payment_fees", JSON.stringify(fees));
-        formData.forEach((v, k) => {
-            console.log(k, v);
-        })
+        formData.append("cancelable", String(cancelable));
+        formData.append("refundable", String(refundable));
 
-        // const idToast = loadingToast();
-        // try {
-        //     const res = await AxiosAuth.post("/payment", formData);  
-        //     loadingSuccessToast(idToast, res.data.message);
-        // } catch (error: any) {
-        //     loadingErrorToast(
-        //         idToast,
-        //         error.response?.data.message ?? "Terjadi kesalahan"
-        //     );
-        // }
+        const idToast = loadingToast();
+        try {
+            const res = await AxiosAuth.post("/payment", formData);  
+            loadingSuccessToast(idToast, res.data.message);
+        } catch (error: any) {
+            loadingErrorToast(
+                idToast,
+                error.response?.data.message ?? "Terjadi kesalahan"
+            );
+        }
     };
 
     return {
-        fees, addFee, removeFee, handleFeeChange, handleSubmit
+        fees, addFee, removeFee, handleFeeChange, handleSubmit,
+        cancelable, setCancelable,
+        refundable, setRefundable
     }
 }
