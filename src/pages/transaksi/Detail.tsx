@@ -6,6 +6,7 @@ import { StatusCard } from '../../components/transaksi/Detail/StatusCard';
 import { FinancialSummary } from '../../components/transaksi/Detail/FinancialSummary';
 import { Header } from '../../components/transaksi/Detail/Header';
 import { useTransactionDetail } from '../../hooks/transaksi/Detail/useTransactionDetail';
+import { TransaksiDetailActions } from '../../components/transaksi/Detail/TransaksiDetailActions';
 
 
 const TransactionDetailPage = () => {
@@ -28,6 +29,7 @@ const TransactionDetailPage = () => {
                     <div className="space-y-6">
                         <StatusCard id={id} transactionData={transactionData} formatCurrency={formatCurrency} setTransactionData={setTransactionData} />
                         <FinancialSummary id={id} transactionData={transactionData} formatCurrency={formatCurrency} />
+                        <TransaksiDetailActions id={id} setTransactionData={setTransactionData} />
                     </div>
                 </div>
             </div>

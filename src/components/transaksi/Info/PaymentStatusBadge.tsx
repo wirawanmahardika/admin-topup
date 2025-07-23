@@ -19,7 +19,7 @@ export const PaymentStatusBadge = ({ status }: PaymentStatusBadgeProps) => {
                 return { className: "badge badge-error capitalize", text: status };
             case "refund":
             case "partial_refund":
-                return { className: "badge badge-info capitalize", text: status.replace("_", " ") };
+                return { className: "badge badge-primary capitalize", text: status.replace("_", " ") };
             default:
                 return { className: "badge badge-ghost", text: status };
         }

@@ -28,17 +28,20 @@ export const uesTambahPayment = () => {
 
         // Tambahkan payment_fees ke formData manual
         formData.append("payment_fees", JSON.stringify(fees));
+        formData.forEach((v, k) => {
+            console.log(k, v);
+        })
 
-        const idToast = loadingToast();
-        try {
-            const res = await AxiosAuth.post("/payment", formData);
-            loadingSuccessToast(idToast, res.data.message);
-        } catch (error: any) {
-            loadingErrorToast(
-                idToast,
-                error.response?.data.message ?? "Terjadi kesalahan"
-            );
-        }
+        // const idToast = loadingToast();
+        // try {
+        //     const res = await AxiosAuth.post("/payment", formData);  
+        //     loadingSuccessToast(idToast, res.data.message);
+        // } catch (error: any) {
+        //     loadingErrorToast(
+        //         idToast,
+        //         error.response?.data.message ?? "Terjadi kesalahan"
+        //     );
+        // }
     };
 
     return {

@@ -4,6 +4,8 @@ import { uesTambahPayment } from "../../hooks/payment/Tambah/useTambahPayment";
 
 export default function TambahPayment() {
     const { fees, handleSubmit, handleFeeChange, addFee, removeFee } = uesTambahPayment()
+
+    
     return (
         <div className="bg-base-100 rounded-lg shadow p-6 max-w-2xl mx-auto">
             <ToastContainer />
@@ -33,9 +35,35 @@ export default function TambahPayment() {
                     />
                 </div>
 
-                {/* DISPLAY NAME */}
+                <div className="flex gap-x-5">
+                    {/* AKTIVASI CANCEL */}
+                    <div className="form-control">
+                        <label className="label cursor-pointer">
+                            <span className="label-text font-medium">Cancelable</span>
+                            <input
+                                type="checkbox"
+                                name="cancelable"
+                                className="checkbox checkbox-primary"
+                            />
+                        </label>
+                    </div>
+
+                    {/* AKTIVASI REFUND */}
+                    <div className="form-control">
+                        <label className="label cursor-pointer">
+                            <span className="label-text font-medium">Refundable</span>
+                            <input
+                                type="checkbox"
+                                name="refundable"
+                                className="checkbox checkbox-primary"
+                            />
+                        </label>
+                    </div>
+                </div>
+
+                {/* AKTIVASI REFUND */}
                 <div>
-                    <label className="block mb-1 font-medium">Display Nama</label>
+                    <label className="block mb-1 font-medium">Display Name</label>
                     <input
                         type="text"
                         name="name"
